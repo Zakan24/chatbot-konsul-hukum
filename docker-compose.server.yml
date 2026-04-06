@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  postgres_hukum:
+    image: postgres:15-alpine
+    container_name: postgres_hukum
+    restart: always
+    environment:
+      POSTGRES_USER: nvn
+      POSTGRES_PASSWORD: tomato_hukum
+      POSTGRES_DB: konsul_hukum
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_hukum_data:/var/lib/postgresql/data
+    networks:
+      - hukum_network
+
+  chroma_hukum:
+    image: chromadb/chroma:latest
+    container_name: chroma_hukum
+    restart: always
+    environment:
+      - IS_PERSISTENT=TRUE
+    ports:
+      - "8002:8000"
+    volumes:
+      - chroma_hukum_data:/chroma/chroma
+    networks:
+      - hukum_network
+
+  app_hukum:
+    image: novn01/konsul-hukum-app:latest
+    container_name: app_hukum
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - postgres_hukum
+      - chroma_hukum
+    networks:
+      - hukum_network
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.konsulhukum.rule=Host(`chat.nvnlab.space`)"
+      - "traefik.http.routers.konsulhukum.entrypoints=web"
+      - "traefik.http.services.konsulhukum.loadbalancer.server.port=3000"
+
+volumes:
+  postgres_hukum_data:
+  chroma_hukum_data:
+
+networks:
+  hukum_network:
+  proxy:
+    external: true
