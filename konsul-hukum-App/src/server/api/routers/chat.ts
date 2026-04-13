@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { answerTaxQuestion, type SourceCitation } from 'nvn/server/ai/chat-agent';
+import { answerLegalQuestion, type SourceCitation } from 'nvn/server/ai/chat-agent';
 import { createTRPCRouter, protectedProcedure } from 'nvn/server/api/trpc';
 
 const chatIdInput = z.object({
@@ -108,7 +108,7 @@ export const chatRouter = createTRPCRouter({
         content: msg.content,
       }));
 
-      const { answer, sources } = await answerTaxQuestion(trimmedMessage, messageHistory);
+      const { answer, sources } = await answerLegalQuestion(trimmedMessage, messageHistory);
 
       const assistantMessage = await ctx.db.message.create({
         data: {

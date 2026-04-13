@@ -1,61 +1,26 @@
 "use server";
 
-import OpenAI from "openai/index.mjs";
-import { ChromaClient } from "chromadb";
-import fs from "fs";
-import path from "path";
-
+import { GoogleGenAI } from "@google/genai";
 import { env } from "nvn/env";
 
-// Force read .env to bypass stale shell environment variables
-const envPath = path.join(process.cwd(), ".env");
-let apiKey = env.OPENAI_API_KEY;
-
-try {
-  if (fs.existsSync(envPath)) {
-    const envFile = fs.readFileSync(envPath, "utf8");
-    const match = envFile.match(/OPENAI_API_KEY="?([^"\n]+)"?/);
-    if (match && match[1]) {
-      apiKey = match[1];
-      console.log("[RAG] Using API Key from .env file");
-    }
-  }
-} catch (e) {
-  console.error("[RAG] Failed to read .env file directly", e);
-}
-
-const openai = new OpenAI({
-  apiKey: apiKey,
+// ---------------------------------------------------------------------------
+// Vertex AI client — authenticates via the mounted service-account key
+// (GOOGLE_APPLICATION_CREDENTIALS env var points to the JSON file).
+// ---------------------------------------------------------------------------
+const ai = new GoogleGenAI({
+  vertexai: true,
+  project: env.GCP_PROJECT_ID,
+  location: env.GCP_LOCATION,
 });
 
-// Custom implementation since it's not exported or missing in this version
-class OpenAIEmbeddingFunction {
-  private apiKey: string;
+const MODEL_ID = "gemini-2.5-flash";
 
-  constructor({ openai_api_key }: { openai_api_key: string }) {
-    this.apiKey = openai_api_key;
-  }
+// Fully-qualified Vertex AI Search data-store resource name
+const DATA_STORE_RESOURCE = `projects/${env.GCP_PROJECT_ID}/locations/global/collections/default_collection/dataStores/${env.VERTEX_AI_DATASTORE_ID}`;
 
-  async generate(texts: string[]): Promise<number[][]> {
-    const response = await openai.embeddings.create({
-      model: "text-embedding-3-small",
-      input: texts,
-    });
-    return response.data.map((d) => d.embedding);
-  }
-}
-
-const embedder = new OpenAIEmbeddingFunction({
-  openai_api_key: apiKey,
-});
-
-const chroma = new ChromaClient({
-  path: env.CHROMA_HOST,
-});
-
-const COLLECTION_NAME = "hukum_docs";
-const MAX_SNIPPET_LENGTH = 800;
-
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 export type SourceCitation = {
   source: string;
   page?: number;
@@ -63,124 +28,129 @@ export type SourceCitation = {
 };
 
 export interface MessageHistory {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
 }
 
-async function fetchContext(question: string): Promise<{
-  promptContext: string;
-  sources: SourceCitation[];
-}> {
-  try {
-    const collection = await chroma.getOrCreateCollection({
-      name: COLLECTION_NAME,
-      embeddingFunction: embedder,
-    });
-
-    const queryResult = await collection.query({
-      queryTexts: [question],
-      nResults: 4,
-    });
-
-    const documents = queryResult.documents?.[0] ?? [];
-    const metadatas = (queryResult.metadatas?.[0] ?? []) as Record<
-      string,
-      unknown
-    >[];
-
-    const sources: SourceCitation[] = documents.map((doc, idx) => {
-      const metadata = metadatas[idx] ?? {};
-      const rawSnippet =
-        typeof doc === "string" ? doc : JSON.stringify(doc, null, 2);
-
-      return {
-        source:
-          (metadata.title as string) ??
-          (metadata.source as string) ??
-          (metadata.uu as string) ??
-          `Referensi ${idx + 1}`,
-        page:
-          typeof metadata.page === "number"
-            ? metadata.page
-            : metadata.page
-              ? Number(metadata.page)
-              : undefined,
-        snippet: rawSnippet.slice(0, MAX_SNIPPET_LENGTH),
-      };
-    });
-
-    const promptContext = sources
-      .map(
-        (src, idx) =>
-          `[#${idx + 1}] ${src.source}${src.page ? ` (hal ${src.page})` : ""
-          }\n${src.snippet ?? ""}`,
-      )
-      .join("\n\n");
-
-    return { promptContext, sources };
-  } catch (error) {
-    console.error("[RAG] Chroma query failed", error);
-    return { promptContext: "", sources: [] };
-  }
-}
-
-export async function answerTaxQuestion(
+// ---------------------------------------------------------------------------
+// Main function: Ask a legal question, get a grounded answer
+// ---------------------------------------------------------------------------
+export async function answerLegalQuestion(
   question: string,
   messageHistory: MessageHistory[] = []
 ): Promise<{
   answer: string;
   sources: SourceCitation[];
 }> {
-  // Configuration: Keep last 10 messages for context
   const MAX_HISTORY = 10;
   const recentHistory = messageHistory.slice(-MAX_HISTORY);
 
-  // Build context-aware query for retrieval
-  let retrievalQuery = question;
-  if (recentHistory.length > 0) {
-    const context = recentHistory
-      .map((m) => `${m.role === 'user' ? 'Pengguna' : 'Asisten'}: ${m.content}`)
-      .join('\n');
-    retrievalQuery = `Konteks Percakapan:\n${context}\n\nPertanyaan Terbaru: ${question}`;
+  // Build the conversation contents for Gemini multi-turn
+  const contents: Array<{ role: "user" | "model"; parts: Array<{ text: string }> }> = [];
+
+  // Add conversation history
+  for (const msg of recentHistory) {
+    contents.push({
+      role: msg.role === "user" ? "user" : "model",
+      parts: [{ text: msg.content }],
+    });
   }
 
-  const { promptContext, sources } = await fetchContext(retrievalQuery);
-
-  const systemPrompt =
-    "Kamu adalah Konsul Hukum, asisten AI hukum Indonesia. Jawab secara formal, ringkas, tetap sopan, dan sertakan dasar hukum bila tersedia. Hindari spekulasi yang tidak berdasar. Gunakan konteks percakapan sebelumnya untuk memberikan jawaban yang lebih relevan.";
-
-  const userPrompt = promptContext
-    ? `Gunakan referensi berikut untuk menjawab pertanyaan hukum.\n\nKonteks:\n${promptContext}\n\nPertanyaan: ${question}`
-    : `Tidak ada konteks tambahan yang relevan. Jawab pertanyaan terkait hukum Indonesia sebaik mungkin berdasarkan peraturan resmi.\n\nPertanyaan: ${question}`;
+  // Add the current question
+  contents.push({
+    role: "user",
+    parts: [{ text: question }],
+  });
 
   try {
-    // Build messages array with conversation history
-    const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
-      { role: "system", content: systemPrompt },
-      ...recentHistory.map((msg) => ({
-        role: msg.role === 'user' ? 'user' as const : 'assistant' as const,
-        content: msg.content,
-      })),
-      { role: "user", content: userPrompt },
-    ];
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      temperature: 0.2,
-      messages,
+    const response = await ai.models.generateContent({
+      model: MODEL_ID,
+      contents,
+      config: {
+        systemInstruction:
+          "Kamu adalah Konsul Hukum, asisten AI hukum Indonesia. Jawab secara formal, ringkas, tetap sopan, dan sertakan dasar hukum bila tersedia. Hindari spekulasi yang tidak berdasar. Gunakan konteks percakapan sebelumnya untuk memberikan jawaban yang lebih relevan. Jawab dalam Bahasa Indonesia.",
+        temperature: 0.2,
+        // Grounding: use Vertex AI Search data store for RAG
+        tools: [
+          {
+            retrieval: {
+              vertexAiSearch: {
+                datastore: DATA_STORE_RESOURCE,
+              },
+            },
+          },
+        ],
+      },
     });
 
     const answer =
-      completion.choices[0]?.message?.content?.trim() ??
+      response.text?.trim() ??
       "Maaf, saya belum dapat menemukan jawaban pasti. Silakan ajukan pertanyaan lebih spesifik.";
+
+    // Extract source citations from grounding metadata
+    const sources = extractSources(response);
 
     return { answer, sources };
   } catch (error) {
-    console.error("[RAG] OpenAI completion failed", error);
+    console.error("[RAG] Vertex AI completion failed", error);
     return {
       answer:
         "Maaf, sistem sedang mengalami gangguan saat memproses pertanyaan Anda. Silakan coba lagi beberapa saat lagi.",
-      sources,
+      sources: [],
     };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Extract source citations from Vertex AI grounding metadata
+// ---------------------------------------------------------------------------
+function extractSources(response: any): SourceCitation[] {
+  try {
+    const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
+    if (!groundingMetadata) return [];
+
+    const chunks = groundingMetadata.groundingChunks ?? [];
+    const supports = groundingMetadata.groundingSupports ?? [];
+
+    const sources: SourceCitation[] = [];
+    const seenSources = new Set<string>();
+
+    // Extract from grounding chunks (retrieved document references)
+    for (const chunk of chunks) {
+      const retrievedContext = chunk.retrievedContext;
+      if (retrievedContext) {
+        const uri = retrievedContext.uri ?? "";
+        const title = retrievedContext.title ?? "";
+        const sourceKey = title || uri || `Referensi ${sources.length + 1}`;
+
+        if (!seenSources.has(sourceKey)) {
+          seenSources.add(sourceKey);
+          sources.push({
+            source: sourceKey,
+            snippet: chunk.web?.title ?? undefined,
+          });
+        }
+      }
+    }
+
+    // Extract from grounding supports (text snippets with source info)
+    for (const support of supports) {
+      const segment = support.segment;
+      if (segment?.text && sources.length > 0) {
+        // Attach snippet text to the first source that doesn't have one yet
+        const targetSource = sources.find((s) => !s.snippet);
+        if (targetSource) {
+          targetSource.snippet = segment.text.slice(0, 800);
+        }
+      }
+    }
+
+    // If no structured sources found, return empty
+    if (sources.length === 0) return [];
+
+    return sources;
+  } catch (error) {
+    console.error("[RAG] Failed to extract grounding sources", error);
+    return [];
   }
 }
