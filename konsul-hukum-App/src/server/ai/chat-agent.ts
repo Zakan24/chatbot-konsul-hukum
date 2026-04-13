@@ -4,19 +4,27 @@ import { GoogleGenAI } from "@google/genai";
 import { env } from "nvn/env";
 
 // ---------------------------------------------------------------------------
-// Vertex AI client — authenticates via the mounted service-account key
-// (GOOGLE_APPLICATION_CREDENTIALS env var points to the JSON file).
+// Vertex AI client — lazy-initialized to avoid build-time auth errors.
+// Authenticates via GOOGLE_APPLICATION_CREDENTIALS env var at runtime.
 // ---------------------------------------------------------------------------
-const ai = new GoogleGenAI({
-  vertexai: true,
-  project: env.GCP_PROJECT_ID,
-  location: env.GCP_LOCATION,
-});
+let _ai: GoogleGenAI | null = null;
+
+function getAI(): GoogleGenAI {
+  if (!_ai) {
+    _ai = new GoogleGenAI({
+      vertexai: true,
+      project: env.GCP_PROJECT_ID,
+      location: env.GCP_LOCATION,
+    });
+  }
+  return _ai;
+}
 
 const MODEL_ID = "gemini-2.5-flash";
 
-// Fully-qualified Vertex AI Search data-store resource name
-const DATA_STORE_RESOURCE = `projects/${env.GCP_PROJECT_ID}/locations/global/collections/default_collection/dataStores/${env.VERTEX_AI_DATASTORE_ID}`;
+function getDataStoreResource(): string {
+  return `projects/${env.GCP_PROJECT_ID}/locations/global/collections/default_collection/dataStores/${env.VERTEX_AI_DATASTORE_ID}`;
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -63,7 +71,7 @@ export async function answerLegalQuestion(
   });
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: MODEL_ID,
       contents,
       config: {
@@ -75,7 +83,7 @@ export async function answerLegalQuestion(
           {
             retrieval: {
               vertexAiSearch: {
-                datastore: DATA_STORE_RESOURCE,
+                datastore: getDataStoreResource(),
               },
             },
           },
