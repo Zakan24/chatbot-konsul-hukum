@@ -462,13 +462,13 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         </nav>
 
         {/* Main Tengah */}
-        <main className="flex-1 flex flex-col relative h-full w-full">
+        <main className="flex-1 flex flex-col relative h-full w-full overflow-hidden">
           {/* Desktop Header */}
           <header className="hidden md:flex h-20 items-center justify-center shrink-0">
             <h1 className="text-[#1A1A1A] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
           </header>
 
-          <div ref={scrollAreaRef} className="flex-1 overflow-y-auto px-4 md:px-8 lg:px-24 pb-32 pt-4 flex flex-col gap-6 scroll-smooth">
+          <div ref={scrollAreaRef} className="flex-1 overflow-y-auto px-4 md:px-8 lg:px-24 pt-4 pb-4 flex flex-col gap-6 scroll-smooth custom-scrollbar">
             {!hasActiveChat && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] text-center max-w-xl mx-auto px-4 mt-12">
                 <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6 shadow-sm">
@@ -518,11 +518,11 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
               </div>
             )}
 
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} className="h-4 shrink-0" />
           </div>
 
           {/* Input Area */}
-          <div className="absolute bottom-4 md:bottom-8 w-full px-4 md:px-8 lg:px-24 flex justify-center bg-gradient-to-t from-white via-white/80 to-transparent pt-10 pb-2">
+          <div className="w-full px-4 md:px-8 lg:px-24 flex justify-center pb-4 md:pb-8 pt-2 shrink-0 z-10">
             <form onSubmit={handleSubmit} className="w-full max-w-3xl">
               <div className="bg-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] border border-gray-100 rounded-full flex items-center px-2 py-2 md:px-4 md:py-3 transition-all focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-300">
                 <Textarea
