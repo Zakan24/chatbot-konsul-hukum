@@ -1,13 +1,13 @@
 import "nvn/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import { AppProviders } from "@/components/providers";
 
-const geist = Geist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -20,8 +20,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
-      <body className="font-sans antialiased" suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
+      <body className="font-sans antialiased bg-gradient-to-br from-[#E2EAFB] via-[#F3E7F8] to-[#E2F1F8]" suppressHydrationWarning>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

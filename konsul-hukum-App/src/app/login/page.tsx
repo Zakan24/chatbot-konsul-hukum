@@ -232,20 +232,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="from-primary/5 via-background to-accent/5 flex min-h-screen items-center justify-center bg-linear-to-br p-4">
+    <div className="bg-transparent flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-card border-border space-y-6 rounded-xl border p-8 shadow-lg">
+        <div className="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] rounded-[2.5rem] space-y-6 p-8">
           {/* Header */}
           <div className="space-y-2 text-center">
-            <div className="bg-primary mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg">
-              <span className="text-primary-foreground text-2xl font-bold">
-                KH
-              </span>
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1A1A1A] to-[#404040] text-white flex items-center justify-center font-bold text-2xl shadow-lg mx-auto mb-4">
+              KH
             </div>
-            <h1 className="text-primary text-2xl font-bold">
+            <h1 className="text-[#1A1A1A] text-2xl font-bold">
               {flowState === "email" ? "Login Konsul Hukum" : "Verifikasi Email"}
             </h1>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-gray-500 text-sm">
               {flowState === "email"
                 ? "Masuk untuk memulai konsultasi hukum"
                 : `Masukkan kode yang dikirim ke ${email}`}
@@ -269,10 +267,9 @@ export default function LoginPage() {
           {flowState === "email" ? (
             <>
               {/* Google Login */}
-              <Button
+              <button
                 type="button"
-                variant="outline"
-                className="w-full cursor-pointer"
+                className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition cursor-pointer"
                 onClick={handleGoogleLogin}
                 disabled={isLoading}
               >
@@ -295,14 +292,14 @@ export default function LoginPage() {
                   />
                 </svg>
                 Masuk dengan Google
-              </Button>
+              </button>
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <span className="border-border w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card text-muted-foreground px-2">Atau</span>
+                  <span className="bg-transparent text-gray-500 px-2">Atau</span>
                 </div>
               </div>
 
@@ -318,12 +315,13 @@ export default function LoginPage() {
                     onChange={handleEmailChange}
                     required
                     disabled={isLoading}
+                    className="rounded-2xl py-6"
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  className="bg-accent text-accent-foreground hover:bg-accent/90 w-full font-semibold cursor-pointer"
+                  className="w-full bg-[#1A1A1A] text-white rounded-2xl py-6 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-gray-800 transition cursor-pointer"
                   disabled={isLoading}
                 >
                   {isLoading ? "Mengirim..." : "Login dengan Email"}
@@ -369,7 +367,7 @@ export default function LoginPage() {
                   variant="outline"
                   onClick={handleBackToEmail}
                   disabled={isLoading}
-                  className="w-full"
+                  className="w-full rounded-2xl py-6"
                 >
                   Ubah Email
                 </Button>
@@ -378,7 +376,7 @@ export default function LoginPage() {
           )}
 
           <div className="text-center">
-            <Link href="/" className="text-primary text-sm hover:underline">
+            <Link href="/" className="text-blue-600 text-sm hover:underline">
               Kembali ke Halaman Utama
             </Link>
           </div>

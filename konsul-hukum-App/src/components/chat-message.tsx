@@ -27,22 +27,17 @@ function SourcesDrawer({ sources }: { sources: Array<{ source: string; page?: nu
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="rounded-lg border border-border overflow-hidden">
+    <div className="flex flex-col gap-2 pl-2 mt-4">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
+        className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2 cursor-pointer hover:text-gray-600 transition"
       >
-        <div className="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
-          </svg>
-          <span>Sumber Referensi ({sources.length})</span>
-        </div>
+        <span>Referensi Dokumen (RAG)</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
+          width="12"
+          height="12"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -56,24 +51,23 @@ function SourcesDrawer({ sources }: { sources: Array<{ source: string; page?: nu
       </button>
 
       {isOpen && (
-        <div className="px-4 pb-3 border-t border-border">
-          <ul className="space-y-1.5 pt-2.5">
-            {sources.map((source, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-1 shrink-0 text-muted-foreground">
-                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                  <polyline points="14 2 14 8 20 8" />
+        <div className="space-y-3 mt-2">
+          {sources.map((source, idx) => (
+            <div key={idx} className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-4 shadow-sm relative overflow-hidden group hover:shadow-md transition">
+              <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+              <div className="flex gap-3 items-center mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
                 </svg>
-                <a
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
-                  className="text-primary hover:underline cursor-pointer"
-                >
-                  {source.source}
-                </a>
-              </li>
-            ))}
-          </ul>
+                <h4 className="font-semibold text-gray-800 text-sm">{source.source}</h4>
+              </div>
+              {source.snippet && (
+                <p className="text-sm text-gray-600 italic leading-relaxed">
+                  "{source.snippet}"
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -163,20 +157,20 @@ export function ChatMessage({ message, isNew = false }: ChatMessageProps) {
 
   return (
     <>
-      <div className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+      <div className={`flex gap-3 items-start ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
         {/* AI Avatar - Left side for assistant */}
         {message.role === 'assistant' && (
-          <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-            AI
+          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
         )}
 
         <div className="max-w-[80%] space-y-2">
           {/* Message Bubble */}
           <div
-            className={`rounded-2xl px-4 py-3 text-sm shadow-sm ${message.role === 'user'
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-card border border-border'
+            className={`px-6 py-4 shadow-sm ${message.role === 'user'
+              ? 'bg-[#1A1A1A] text-white rounded-3xl rounded-tr-sm'
+              : 'bg-white border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] rounded-3xl rounded-tl-sm'
               }`}
           >
             {message.role === 'assistant' ? (
@@ -282,8 +276,8 @@ export function ChatMessage({ message, isNew = false }: ChatMessageProps) {
 
         {/* User Avatar - Right side for user */}
         {message.role === 'user' && (
-          <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-            U
+          <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-white shrink-0 mt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
         )}
       </div>

@@ -338,258 +338,232 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
   }, [historyQuery, currentChatId, handleRenameClick, handleDeleteClick]);
 
   return (
-    <div className="flex h-screen flex-col">
-      {/* Header */}
-      <header className="bg-primary text-primary-foreground border-primary-foreground/10 border-b px-4 md:px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Hamburger menu button - visible on mobile and tablet */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden h-8 w-8 p-0"
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            >
-              {isSidebarOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </Button>
-            <Link href="/" className="flex items-center gap-2">
-              <div className="bg-primary-foreground/20 flex h-8 w-8 items-center justify-center rounded-md font-bold text-sm">
-                KH
-              </div>
-              <h1 className="text-lg font-bold hidden sm:block">Konsul Hukum</h1>
-            </Link>
-          </div>
+    <div className="bg-gradient-to-br from-[#E2EAFB] via-[#F3E7F8] to-[#E2F1F8] h-screen w-screen flex items-center justify-center p-2 md:p-4 overflow-hidden">
+      
+      {/* Mobile overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={handleCloseSidebar}
+        />
+      )}
 
-          {/* Toggle Tabs */}
-          <div className="flex items-center bg-white rounded-full p-1 shadow-sm">
-            <div className="px-5 py-2 rounded-full text-sm font-medium text-sidebar-primary-foreground bg-sidebar-primary">
-              Konsul Hukum
+      {/* Mobile Drawer (Combining Nav and Right Aside) */}
+      <aside className={`
+        bg-white border-r border-gray-100
+        flex flex-col
+        fixed top-0 bottom-0 left-0
+        z-50 w-72
+        transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:hidden
+      `}>
+        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1A1A1A] to-[#404040] text-white flex items-center justify-center font-bold shadow-sm">
+              KH
             </div>
-            <Link
-              href="/direktori"
-              className="px-5 py-2 rounded-full text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Direktori
-            </Link>
+            <span className="font-semibold text-gray-800">Konsul Hukum</span>
           </div>
-
-
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-10 w-10 rounded-full p-0 cursor-pointer"
-              >
-                <Avatar className="h-10 w-10">
-                  <AvatarImage
-                    src={session?.user?.image ?? ""}
-                    alt={session?.user?.name ?? "User"}
-                  />
-                  <AvatarFallback className="bg-accent text-accent-foreground">
-                    {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {session?.user?.name}
-                  </p>
-                  <p className="text-muted-foreground text-xs leading-none">
-                    {session?.user?.email}
-                  </p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer" asChild>
-                <Link href="/direktori">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
-                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
-                  </svg>
-                  <span>Direktori Peraturan</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Logout</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button variant="ghost" size="icon" onClick={handleCloseSidebar}>
+            <X className="h-5 w-5" />
+          </Button>
         </div>
-      </header >
+        <div className="p-4 border-b border-gray-100">
+          <button
+            onClick={() => {
+              handleCreateChat();
+              handleCloseSidebar();
+            }}
+            className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+              <path d="M5 12h14"/><path d="M12 5v14"/>
+            </svg>
+            Chat Baru
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="space-y-1">{sidebarContent}</div>
+        </div>
+        <div className="p-4 border-t border-gray-100">
+           <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50" onClick={handleLogout}>
+             <LogOut className="mr-2 h-4 w-4" />
+             Logout
+           </Button>
+        </div>
+      </aside>
 
-      <div className="flex flex-1 overflow-hidden relative">
-        {/* Mobile overlay */}
-        {isSidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black/50 z-40 md:hidden"
-            onClick={handleCloseSidebar}
-          />
-        )}
+      <div className="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] rounded-3xl md:rounded-[2.5rem] w-full max-w-[1400px] h-full md:h-[95vh] flex flex-col md:flex-row overflow-hidden relative">
 
-        {/* Sidebar */}
-        <aside className={`
-          bg-sidebar text-sidebar-foreground border-sidebar-border
-          flex flex-col border-r
-          fixed md:static
-          top-[65px] md:top-0 bottom-0 left-0
-          z-50
-          w-64 md:w-64
-          transform transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        `}>
-          <div className="border-sidebar-border border-b p-3">
-            <button
-              type="button"
-              onClick={() => {
-                handleCreateChat();
-                handleCloseSidebar();
-              }}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-sidebar-primary px-4 py-2.5 text-sm font-medium text-sidebar-primary-foreground shadow-sm transition-all hover:bg-sidebar-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              Percakapan Baru
-            </button>
+        {/* Mobile Header */}
+        <header className="md:hidden h-16 flex items-center justify-between px-4 border-b border-gray-100/50 shrink-0 bg-white/50">
+          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
+            <Menu className="h-6 w-6" />
+          </Button>
+          <h1 className="text-[#1A1A1A] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={session?.user?.image ?? ""} />
+            <AvatarFallback>{session?.user?.name?.charAt(0) ?? "U"}</AvatarFallback>
+          </Avatar>
+        </header>
+
+        {/* Desktop Nav Kiri */}
+        <nav className="w-20 hidden md:flex flex-col items-center py-8 gap-6 border-r border-gray-100/50 shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#1A1A1A] to-[#404040] text-white flex items-center justify-center font-bold text-xl shadow-lg mb-4">
+            KH
           </div>
+          <div className="mt-auto">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 text-white flex items-center justify-center font-bold text-sm shadow-md cursor-pointer outline-none hover:opacity-90 transition">
+                  {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" side="right" className="w-56 ml-2">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{session?.user?.name}</p>
+                    <p className="text-xs leading-none text-gray-500">{session?.user?.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </nav>
 
-          <ScrollArea className="flex-1 min-h-0">
-            <div className="space-y-1 p-3">{sidebarContent}</div>
-          </ScrollArea>
-        </aside>
+        {/* Main Tengah */}
+        <main className="flex-1 flex flex-col relative h-full w-full">
+          {/* Desktop Header */}
+          <header className="hidden md:flex h-20 items-center justify-center shrink-0">
+            <h1 className="text-[#1A1A1A] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
+          </header>
 
-        {/* Main Chat Area */}
-        <main className="flex flex-1 flex-col overflow-hidden w-full">
-          <div ref={scrollAreaRef} className="flex-1 overflow-y-auto p-4 md:p-6">
-            <div className="mx-auto max-w-4xl space-y-6">
-              {!hasActiveChat && (
-                <div className="flex items-center justify-center min-h-[calc(100vh-300px)]">
-                  <div className="text-center max-w-2xl mx-auto px-4">
-                    <h2 className="text-3xl md:text-4xl font-semibold mb-8">
-                      Ada yang bisa dibantu terkait hukum hari ini?
-                    </h2>
+          <div ref={scrollAreaRef} className="flex-1 overflow-y-auto px-4 md:px-8 lg:px-24 pb-32 pt-4 flex flex-col gap-6 scroll-smooth">
+            {!hasActiveChat && (
+              <div className="flex flex-col items-center justify-center min-h-[50vh] text-center max-w-xl mx-auto px-4 mt-12">
+                <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-3">
+                  Konsultasi Hukum AI
+                </h2>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  Tanyakan masalah hukum Anda. AI kami akan memberikan analisis berdasarkan peraturan perundang-undangan di Indonesia.
+                </p>
+              </div>
+            )}
+
+            {hasActiveChat && messagesQuery.isLoading && !isCreatingNewChat.current && (
+              <div className="text-gray-500 py-8 text-center text-sm">
+                Loading pesan...
+              </div>
+            )}
+
+            {hasActiveChat && messagesQuery.isSuccess && messagesQuery.data?.map((msg) => (
+              <ChatMessage key={msg.id} message={msg} isNew={msg.id === newAssistantMessageId} />
+            ))}
+
+            {optimisticMessages.map((msg) => (
+              <ChatMessage key={msg.id} message={msg as RouterOutputs["chat"]["messages"][number]} />
+            ))}
+
+            {isAIThinking && (
+              <div className="flex justify-start gap-3 items-start">
+                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div className="bg-white border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] rounded-3xl rounded-tl-sm px-6 py-4 flex items-center gap-2">
+                  <div className="flex gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce"></div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* Only show loading if we're switching chats (not creating a new one) */}
-              {hasActiveChat && messagesQuery.isLoading && !isCreatingNewChat.current && (
-                <div className="text-muted-foreground py-8 text-center">
-                  Loading pesan...
-                </div>
-              )}
+            {hasActiveChat && messagesQuery.isError && (
+              <div className="text-red-500 py-8 text-center text-sm">
+                Gagal memuat pesan. Silakan muat ulang halaman.
+              </div>
+            )}
 
-              {hasActiveChat &&
-                messagesQuery.isSuccess &&
-                messagesQuery.data?.map((msg) => (
-                  <ChatMessage
-                    key={msg.id}
-                    message={msg}
-                    isNew={msg.id === newAssistantMessageId}
-                  />
-                ))}
-
-              {/* Optimistic messages */}
-              {optimisticMessages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg as RouterOutputs["chat"]["messages"][number]} />
-              ))}
-
-              {/* AI Thinking Indicator */}
-              {isAIThinking && (
-                <div className="flex gap-3 justify-start">
-                  <div className="mt-0.5 grid h-7 w-7 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                    AI
-                  </div>
-                  <div className="max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm bg-card border border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.3s]"></div>
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.15s]"></div>
-                        <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground"></div>
-                      </div>
-                      <span className="text-sm text-muted-foreground">AI sedang berpikir...</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {hasActiveChat && messagesQuery.isError && (
-                <div className="text-destructive py-8 text-center">
-                  Gagal memuat pesan. Silakan muat ulang halaman.
-                </div>
-              )}
-
-              {/* Scroll anchor */}
-              <div ref={messagesEndRef} />
-            </div>
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Input Area */}
-          <div className="border-border bg-card border-t p-4">
-            <form onSubmit={handleSubmit} className="mx-auto max-w-4xl">
-              <div className="flex flex-col rounded-2xl border border-border bg-card shadow-sm transition-all duration-200 p-3">
-                <div className="flex-1 relative">
-                  <Textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Tanyakan tentang hukum..."
-                    className="min-h-[40px] resize-none border-0 bg-transparent px-0 py-2 text-sm outline-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        void handleSend();
-                      }
-                    }}
-                    disabled={isComposerBusy}
-                  />
-                </div>
-                <div className="flex items-center justify-end mt-2">
-                  <button
-                    type="submit"
-                    disabled={isComposerBusy || !message.trim()}
-                    className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent px-3 py-2 text-sm font-medium text-accent-foreground shadow-sm transition-all hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                  >
-                    {isComposerBusy ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Send className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
+          <div className="absolute bottom-4 md:bottom-8 w-full px-4 md:px-8 lg:px-24 flex justify-center bg-gradient-to-t from-white via-white/80 to-transparent pt-10 pb-2">
+            <form onSubmit={handleSubmit} className="w-full max-w-3xl">
+              <div className="bg-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] border border-gray-100 rounded-full flex items-center px-2 py-2 md:px-4 md:py-3 transition-all focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-300">
+                <Textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Ketik masalah hukum Anda..."
+                  className="flex-1 min-h-[24px] max-h-[120px] resize-none border-0 bg-transparent px-4 py-2 text-[15px] text-gray-700 placeholder-gray-400 outline-none focus-visible:ring-0 focus-visible:ring-offset-0 scrollbar-hide"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      void handleSend();
+                    }
+                  }}
+                  disabled={isComposerBusy}
+                  rows={1}
+                />
+                <button
+                  type="submit"
+                  disabled={isComposerBusy || !message.trim()}
+                  className="w-10 h-10 shrink-0 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed ml-2 cursor-pointer"
+                >
+                  {isComposerBusy ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="-ml-0.5"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                  )}
+                </button>
               </div>
-              <div className="mt-2 px-1 text-[11px] text-muted-foreground">
-                Tekan{" "}
-                <kbd className="rounded border border-border bg-muted px-1 text-[10px]">Enter</kbd>{" "}
-                untuk kirim ·{" "}
-                <kbd className="rounded border border-border bg-muted px-1 text-[10px]">Shift</kbd>
-                +
-                <kbd className="rounded border border-border bg-muted px-1 text-[10px]">Enter</kbd>{" "}
-                untuk baris baru
+              <div className="text-center mt-3 text-[11px] text-gray-400">
+                AI dapat membuat kesalahan. Harap verifikasi informasi penting.
               </div>
             </form>
           </div>
         </main>
-      </div>
 
+        {/* Desktop Aside Kanan */}
+        <aside className="w-80 hidden md:flex bg-gray-50/50 border-l border-gray-100/80 p-6 flex-col shrink-0">
+          <button
+            onClick={handleCreateChat}
+            className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition mb-8 cursor-pointer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+              <path d="M5 12h14"/><path d="M12 5v14"/>
+            </svg>
+            Chat Baru
+          </button>
+          
+          <div className="flex flex-col gap-4 mb-6">
+            <Link href="/direktori" className="flex items-center gap-3 text-sm text-gray-700 hover:bg-white p-2 rounded-lg cursor-pointer transition">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>
+              <span>Direktori Peraturan</span>
+            </Link>
+          </div>
+
+          <button className="w-full bg-[#1A1A1A] text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-gray-800 transition mb-8 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            Konsultasi Langsung
+          </button>
+
+          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+            {sidebarContent}
+          </div>
+        </aside>
+
+      </div>
       {/* Rename Chat Modal */}
       {
         renamingChatId && (
