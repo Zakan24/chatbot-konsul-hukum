@@ -562,7 +562,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         <aside className="w-80 hidden md:flex bg-gray-50/50 border-l border-gray-100/80 p-6 flex-col shrink-0">
           <button
             onClick={handleCreateChat}
-            className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition mb-8 cursor-pointer"
+            className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition mb-4 cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
               <path d="M5 12h14"/><path d="M12 5v14"/>
@@ -570,14 +570,14 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
             Chat Baru
           </button>
           
-          <div className="flex flex-col gap-4 mb-6">
-            <Link href="/direktori" className="w-full bg-yellow-400 text-yellow-950 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-yellow-500 transition cursor-pointer">
+          <div className="flex flex-col gap-3 mb-4">
+            <Link href="/direktori" className="w-full bg-indigo-600 text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-indigo-700 transition cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>
               <span>Direktori Peraturan</span>
             </Link>
           </div>
 
-          <button className="w-full bg-[#1A1A1A] text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-gray-800 transition mb-8 cursor-pointer">
+          <button className="w-full bg-[#1A1A1A] text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-gray-800 transition mb-6 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
             Konsultasi Langsung
           </button>
