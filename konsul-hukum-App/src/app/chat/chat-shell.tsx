@@ -20,7 +20,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { api } from "nvn/trpc/react";
+import { api, type RouterOutputs } from "nvn/trpc/react";
+import { type SourceCitation } from "nvn/server/ai/chat-agent";
 
 interface ChatShellProps {
   initialChatId: string | null;
@@ -41,11 +42,14 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
     role: "user" | "assistant";
     content: string;
     createdAt: Date;
-    sources: any[] | undefined;
+    sources: SourceCitation[] | undefined;
     feedback: { rating: "suka" | "tidak_suka" } | null;
-  }>>([]);
+  }>>([])
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Track the latest AI message ID for typewriter animation
+  const [newAssistantMessageId, setNewAssistantMessageId] = useState<number | null>(null);
 
   // Track if we're in the process of creating a new chat (to avoid showing "Loading pesan...")
   const isCreatingNewChat = useRef(false);
@@ -146,10 +150,15 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         throw new Error("Gagal menentukan chat ID untuk percakapan.");
       }
 
-      await sendMessageMutation.mutateAsync({
+      const result = await sendMessageMutation.mutateAsync({
         chatId: targetChatId,
         message: text,
       });
+
+      // Track the new assistant message for typewriter animation
+      if (result.assistantMessage?.id) {
+        setNewAssistantMessageId(result.assistantMessage.id);
+      }
 
       await Promise.all([
         utils.chat.messages.invalidate({ chatId: targetChatId }),
@@ -177,6 +186,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
     // Reset to new chat state
     setCurrentChatId(null);
     setOptimisticMessages([]);
+    setNewAssistantMessageId(null);
     setMessage("");
     // Use window.history to avoid page reload
     if (pathname !== "/chat") {
@@ -347,10 +357,23 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
               )}
             </Button>
             <Link href="/" className="flex items-center gap-2">
-              <div className="bg-accent text-accent-foreground flex h-8 w-8 items-center justify-center rounded-md font-bold">
-                KP
+              <div className="bg-primary-foreground/20 flex h-8 w-8 items-center justify-center rounded-md font-bold text-sm">
+                KH
               </div>
-              <h1 className="text-lg font-bold">Konsul Hukum</h1>
+              <h1 className="text-lg font-bold hidden sm:block">Konsul Hukum</h1>
+            </Link>
+          </div>
+
+          {/* Toggle Tabs */}
+          <div className="flex items-center bg-white rounded-full p-1 shadow-sm">
+            <div className="px-5 py-2 rounded-full text-sm font-medium text-sidebar-primary-foreground bg-sidebar-primary">
+              Konsul Hukum
+            </div>
+            <Link
+              href="/direktori"
+              className="px-5 py-2 rounded-full text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Direktori
             </Link>
           </div>
 
@@ -384,6 +407,15 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
                   </p>
                 </div>
               </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link href="/direktori">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
+                  </svg>
+                  <span>Direktori Peraturan</span>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
@@ -455,47 +487,6 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
                     <h2 className="text-3xl md:text-4xl font-semibold mb-8">
                       Ada yang bisa dibantu terkait hukum hari ini?
                     </h2>
-
-                    {/* Disclaimer Alert */}
-                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 text-left">
-                      <div className="flex gap-3">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                          <line x1="12" y1="9" x2="12" y2="13" />
-                          <line x1="12" y1="17" x2="12.01" y2="17" />
-                        </svg>
-                        <div>
-                          <h3 className="font-semibold text-yellow-700 dark:text-yellow-400 mb-1">
-                            Aplikasi Demo Untuk Dosen Hukum di Universitas Pamulang
-                          </h3>
-                          <p className="text-sm text-yellow-700/90 dark:text-yellow-400/90 mb-3">
-                            Aplikasi ini masih dalam tahap pengembangan. Jawaban yang diberikan mungkin belum 100% akurat.
-                          </p>
-                          <div className="text-sm text-yellow-700/90 dark:text-yellow-400/90">
-                            <p className="font-semibold mb-2">Data yang digunakan saat ini  :</p>
-                            <ul className="list-disc list-inside space-y-1 ml-2">
-                              <li>UU Nomor 6 Tahun 2023 - Penetapan Peraturan Pemerintah Pengganti UU tentang Cipta Kerja</li>
-                              <li>UU Nomor 7 Tahun 2021 - Harmonisasi Peraturan Hukum</li>
-                              <li>UU Nomor 11 Tahun 2020 - Cipta Kerja</li>
-                              <li>UU Nomor 16 Tahun 2009 - Ketentuan Umum dan Tata Cara Hukum</li>
-                              <li>UU Nomor 28 Tahun 2007 - Ketentuan Umum dan Tata Cara Hukum</li>
-                              <li>UU Nomor 16 Tahun 2000 - Ketentuan Umum dan Tata Cara Hukum</li>
-                              <li>UU Nomor 9 Tahun 1994 - Ketentuan Umum dan Tata Cara Hukum</li>
-                              <li>SDSN 202 - Susunan Dalam Satu Naskah 2025</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
@@ -510,12 +501,16 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
               {hasActiveChat &&
                 messagesQuery.isSuccess &&
                 messagesQuery.data?.map((msg) => (
-                  <ChatMessage key={msg.id} message={msg} />
+                  <ChatMessage
+                    key={msg.id}
+                    message={msg}
+                    isNew={msg.id === newAssistantMessageId}
+                  />
                 ))}
 
               {/* Optimistic messages */}
               {optimisticMessages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg as any} />
+                <ChatMessage key={msg.id} message={msg as RouterOutputs["chat"]["messages"][number]} />
               ))}
 
               {/* AI Thinking Indicator */}

@@ -110,7 +110,7 @@ export async function sendOTPEmail(email: string, code: string): Promise<void> {
           <body>
             <div class="container">
               <div class="header">
-                <div class="logo">KP</div>
+                <div class="logo">KH</div>
                 <h1>Kode Verifikasi Login</h1>
               </div>
               

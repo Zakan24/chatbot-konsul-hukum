@@ -1,179 +1,137 @@
 'use client'
 
-import { useState } from 'react'
+import { api } from 'nvn/trpc/react'
+import { AdminLayout } from '@/components/admin-layout'
+import { Users, MessageCircle, FileText, ThumbsUp, ThumbsDown, Scale } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 
-// Mock query hook - replace with actual tRPC hook
-const useGetFeedback = () => {
-  // TODO: Replace with api.admin.getFeedback.useQuery()
-  return {
-    data: [
-      {
-        id: 'f1',
-        rating: 'suka',
-        userQuestion: 'Bagaimana cara menghitung PPh 21?',
-        systemAnswer: 'PPh 21 dihitung berdasarkan penghasilan bruto...',
-        timestamp: new Date('2025-01-15T10:30:00'),
-      },
-      {
-        id: 'f2',
-        rating: 'tidak_suka',
-        userQuestion: 'Kapan batas waktu lapor SPT?',
-        systemAnswer: 'Batas waktu lapor SPT adalah 31 Maret untuk pribadi...',
-        timestamp: new Date('2025-01-14T15:20:00'),
-      },
-      {
-        id: 'f3',
-        rating: 'suka',
-        userQuestion: 'Apa itu NPWP?',
-        systemAnswer: 'NPWP adalah Nomor Pokok Wajib Hukum...',
-        timestamp: new Date('2025-01-13T09:15:00'),
-      },
-    ],
-    isLoading: false,
-    isSuccess: true,
-    isError: false,
-  }
-}
+const statCards = [
+  { key: 'users', label: 'Total Pengguna', icon: Users, color: 'text-sidebar-primary-foreground', bg: 'bg-sidebar-primary' },
+  { key: 'chats', label: 'Total Chat', icon: MessageCircle, color: 'text-sidebar-primary-foreground', bg: 'bg-sidebar-primary' },
+  { key: 'messages', label: 'Total Pesan', icon: FileText, color: 'text-sidebar-primary-foreground', bg: 'bg-sidebar-primary' },
+  { key: 'feedbackSuka', label: 'Feedback Suka', icon: ThumbsUp, color: 'text-sidebar-primary-foreground', bg: 'bg-sidebar-primary' },
+  { key: 'feedbackTidakSuka', label: 'Feedback Tidak Suka', icon: ThumbsDown, color: 'text-sidebar-primary-foreground', bg: 'bg-sidebar-primary' },
+  { key: 'peraturan', label: 'Total Peraturan', icon: Scale, color: 'text-sidebar-primary-foreground', bg: 'bg-sidebar-primary' },
+] as const
 
 export default function AdminDashboardPage() {
-  const [filter, setFilter] = useState<'all' | 'suka' | 'tidak_suka'>('all')
-  const feedbackQuery = useGetFeedback()
+  const statsQuery = api.admin.stats.useQuery(undefined, { retry: false })
+  const recentChatsQuery = api.admin.chats.useQuery({ page: 1, limit: 5 }, { retry: false })
+  const recentFeedbackQuery = api.admin.feedback.useQuery({ page: 1, limit: 5 }, { retry: false })
 
-  const filteredData = feedbackQuery.data?.filter((item) => {
-    if (filter === 'all') return true
-    return item.rating === filter
-  })
+  if (statsQuery.isError) {
+    if (statsQuery.error.data?.code === 'UNAUTHORIZED') {
+      window.location.href = '/admin/login'
+      return null
+    }
+  }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-primary text-primary-foreground py-4 px-6 border-b border-primary-foreground/10">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-accent rounded-md flex items-center justify-center font-bold text-accent-foreground">
-              KP
-            </div>
-            <h1 className="text-lg font-bold">Admin Dashboard</h1>
-          </div>
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10">
-              Logout
-            </Button>
-          </Link>
-        </div>
-      </header>
+    <AdminLayout>
+      <h2 className="text-2xl font-bold text-foreground mb-6">Dashboard</h2>
 
-      {/* Main Content */}
-      <main className="flex-1 p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-3xl font-bold text-primary">Dashboard Feedback Konsul Hukum</h2>
-            <div className="w-64">
-              <Select value={filter} onValueChange={(value: 'all' | 'suka' | 'tidak_suka') => setFilter(value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Filter rating" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Semua</SelectItem>
-                  <SelectItem value="suka">Suka</SelectItem>
-                  <SelectItem value="tidak_suka">Tidak Suka</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+      {statsQuery.isLoading && (
+        <p className="text-muted-foreground mb-6">Memuat statistik...</p>
+      )}
 
-          {feedbackQuery.isLoading && (
-            <div className="text-center py-12 text-muted-foreground">Loading data...</div>
-          )}
-
-          {feedbackQuery.isError && (
-            <div className="text-center py-12 text-destructive">
-              Error loading feedback data
-            </div>
-          )}
-
-          {feedbackQuery.isSuccess && (
-            <div className="bg-card border border-border rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-primary text-primary-foreground">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold">Rating</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold">Pertanyaan Pengguna</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold">Jawaban Sistem</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold">Waktu</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {filteredData?.map((item) => (
-                      <tr key={item.id} className="hover:bg-muted/50 transition-colors">
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${item.rating === 'suka'
-                              ? 'bg-accent/20 text-accent-foreground'
-                              : 'bg-destructive/20 text-destructive'
-                              }`}
-                          >
-                            {item.rating === 'suka' ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M7 10v12" />
-                                <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z" />
-                              </svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M17 14V2" />
-                                <path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z" />
-                              </svg>
-                            )}
-                            {item.rating === 'suka' ? 'Suka' : 'Tidak Suka'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 max-w-xs">
-                          <div className="text-sm text-foreground line-clamp-2">{item.userQuestion}</div>
-                        </td>
-                        <td className="px-6 py-4 max-w-md">
-                          <div className="text-sm text-muted-foreground line-clamp-2">
-                            {item.systemAnswer}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-muted-foreground">
-                            {item.timestamp.toLocaleDateString('id-ID', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
-                            <br />
-                            {item.timestamp.toLocaleTimeString('id-ID', {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {filteredData?.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground">
-                  Tidak ada feedback untuk filter ini
+      {statsQuery.data && (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          {statCards.map((card) => {
+            const Icon = card.icon
+            return (
+              <div
+                key={card.key}
+                className="bg-card border border-border rounded-xl p-5 flex flex-col items-center justify-center text-center transition-all hover:shadow-md"
+              >
+                <div className={`p-3 rounded-full mb-3 ${card.bg} ${card.color}`}>
+                  <Icon className="w-6 h-6" />
                 </div>
-              )}
-            </div>
-          )}
+                <div className="text-2xl font-bold text-foreground mb-1">
+                  {statsQuery.data[card.key]}
+                </div>
+                <div className="text-xs font-medium text-muted-foreground">{card.label}</div>
+              </div>
+            )
+          })}
         </div>
-      </main>
-    </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Chats */}
+        <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col">
+          <div className="p-4 border-b border-border bg-muted/20 flex items-center justify-between">
+            <h3 className="font-semibold flex items-center gap-2">
+              <MessageCircle className="w-4 h-4" /> Chat Terbaru
+            </h3>
+            <Link href="/admin/chats" className="text-xs text-primary hover:underline">Lihat Semua</Link>
+          </div>
+          <div className="p-4 flex-1">
+            {recentChatsQuery.isLoading ? (
+              <p className="text-sm text-muted-foreground">Memuat...</p>
+            ) : recentChatsQuery.data?.items.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">Belum ada chat.</p>
+            ) : (
+              <div className="space-y-4">
+                {recentChatsQuery.data?.items.map(chat => (
+                  <div key={chat.id} className="flex items-start justify-between gap-4 border-b border-border/50 last:border-0 pb-4 last:pb-0">
+                    <div>
+                      <p className="font-medium text-sm line-clamp-1">{chat.title}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{chat.user.name ?? chat.user.email}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(chat.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric' })}
+                      </p>
+                      <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full inline-block mt-1">
+                        {chat._count.messages} pesan
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Recent Feedback */}
+        <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col">
+          <div className="p-4 border-b border-border bg-muted/20 flex items-center justify-between">
+            <h3 className="font-semibold flex items-center gap-2">
+              <ThumbsUp className="w-4 h-4" /> Feedback Terbaru
+            </h3>
+            <Link href="/admin/feedback" className="text-xs text-primary hover:underline">Lihat Semua</Link>
+          </div>
+          <div className="p-4 flex-1">
+            {recentFeedbackQuery.isLoading ? (
+              <p className="text-sm text-muted-foreground">Memuat...</p>
+            ) : recentFeedbackQuery.data?.items.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">Belum ada feedback.</p>
+            ) : (
+              <div className="space-y-4">
+                {recentFeedbackQuery.data?.items.map(item => (
+                  <div key={item.id} className="flex items-start gap-3 border-b border-border/50 last:border-0 pb-4 last:pb-0">
+                    <div className="shrink-0 mt-0.5">
+                      {item.rating === 'suka' ? (
+                        <div className="bg-green-100 text-green-700 p-1.5 rounded-full"><ThumbsUp className="w-3.5 h-3.5" /></div>
+                      ) : (
+                        <div className="bg-red-100 text-red-700 p-1.5 rounded-full"><ThumbsDown className="w-3.5 h-3.5" /></div>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground line-clamp-1 mb-1">
+                        <span className="font-medium text-foreground">{item.user.name ?? item.user.email}</span> bertanya:
+                      </p>
+                      <p className="text-sm line-clamp-2 italic text-foreground/80 bg-muted/50 p-2 rounded-md border border-border/50">
+                        &quot;{item.message.chat.messages[0]?.content ?? '-'}&quot;
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </AdminLayout>
   )
 }

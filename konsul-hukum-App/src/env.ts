@@ -29,6 +29,7 @@ export const env = createEnv({
     GCP_PROJECT_ID: z.string(),
     GCP_LOCATION: z.string().default("global"),
     VERTEX_AI_DATASTORE_ID: z.string(),
+    GOOGLE_APPLICATION_CREDENTIALS: z.string(),
 
     // --- Admin & Email ---
     ADMIN_USERNAME: z.string(),
@@ -61,6 +62,7 @@ export const env = createEnv({
     GCP_PROJECT_ID: process.env.GCP_PROJECT_ID,
     GCP_LOCATION: process.env.GCP_LOCATION,
     VERTEX_AI_DATASTORE_ID: process.env.VERTEX_AI_DATASTORE_ID,
+    GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 
     // --- Admin & Email ---
     ADMIN_USERNAME: process.env.ADMIN_USERNAME,

@@ -239,7 +239,7 @@ export default function LoginPage() {
           <div className="space-y-2 text-center">
             <div className="bg-primary mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg">
               <span className="text-primary-foreground text-2xl font-bold">
-                KP
+                KH
               </span>
             </div>
             <h1 className="text-primary text-2xl font-bold">
