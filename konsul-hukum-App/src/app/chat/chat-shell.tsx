@@ -294,7 +294,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         acc.older.push(chat);
       }
       return acc;
-    }, { today: [], yesterday: [], older: [] } as Record<string, typeof data>);
+    }, { today: [], yesterday: [], older: [] } as Record<"today" | "yesterday" | "older", typeof data>);
 
     const renderGroup = (title: string, chats: typeof data | undefined) => {
       if (!chats || chats.length === 0) return null;
