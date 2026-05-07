@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { LogOut, Menu, X, Send, Loader2 } from "lucide-react";
+import { LogOut, Menu, X, Send, Loader2, MessageSquare, ChevronDown, MoreVertical } from "lucide-react";
 
 import { ChatMessage } from "@/components/chat-message";
 import { Button } from "@/components/ui/button";
@@ -274,67 +274,89 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
       );
     }
 
-    return historyQuery.data?.map((chat) => {
-      const isSelected = currentChatId === chat.id;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const groups = historyQuery.data.reduce((acc, chat) => {
+      const chatDate = new Date(chat.createdAt);
+      chatDate.setHours(0, 0, 0, 0);
+
+      if (chatDate.getTime() === today.getTime()) {
+        acc.today.push(chat);
+      } else if (chatDate.getTime() === yesterday.getTime()) {
+        acc.yesterday.push(chat);
+      } else {
+        acc.older.push(chat);
+      }
+      return acc;
+    }, { today: [], yesterday: [], older: [] } as Record<string, typeof historyQuery.data>);
+
+    const renderGroup = (title: string, chats: typeof historyQuery.data) => {
+      if (chats.length === 0) return null;
 
       return (
-        <div key={chat.id} className="group relative">
-          <Link href={`/chat/${chat.id}`} className="block" onClick={handleCloseSidebar}>
-            <div
-              className={`rounded-lg p-3 transition-all ${isSelected
-                ? "bg-sidebar-accent/50 group-hover:bg-sidebar-accent"
-                : "hover:bg-sidebar-accent"
-                }`}
-            >
-              <div className="truncate text-sm font-medium pr-8 max-w-[180px]">{chat.title}</div>
-              <div className="text-sidebar-foreground/60 mt-1 text-xs">
-                {new Date(chat.createdAt).toLocaleDateString("id-ID")}
-              </div>
-            </div>
-          </Link>
+        <div className="mb-6">
+          <h3 className="text-xs font-semibold text-gray-400 flex items-center gap-1 mb-3">
+            {title} <ChevronDown className="w-3 h-3" />
+          </h3>
+          <ul className="space-y-3">
+            {chats.map((chat) => {
+              const isSelected = currentChatId === chat.id;
 
-          {/* Three-dot menu - appears on hover */}
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="1" />
-                    <circle cx="19" cy="12" r="1" />
-                    <circle cx="5" cy="12" r="1" />
-                  </svg>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => handleRenameClick(chat.id, chat.title)}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                    <path d="m15 5 4 4" />
-                  </svg>
-                  Ubah Judul
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleDeleteClick(chat.id)}
-                  className="text-destructive focus:text-destructive"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                    <path d="M3 6h18" />
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                  </svg>
-                  Hapus Chat
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+              return (
+                <li key={chat.id} className={`text-[13px] flex items-start gap-2 cursor-pointer hover:text-gray-900 truncate justify-between group ${isSelected ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
+                  <Link href={`/chat/${chat.id}`} className="flex-1 flex items-start gap-2 truncate" onClick={handleCloseSidebar}>
+                    <MessageSquare className="w-4 h-4 mt-0.5 opacity-50 shrink-0" />
+                    <span className="truncate">{chat.title}</span>
+                  </Link>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 shrink-0 cursor-pointer"
+                        onClick={(e) => e.preventDefault()}
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleRenameClick(chat.id, chat.title)} className="cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                          <path d="m15 5 4 4" />
+                        </svg>
+                        Ubah Judul
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDeleteClick(chat.id)}
+                        className="text-destructive focus:text-destructive cursor-pointer"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                          <path d="M3 6h18" />
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                        </svg>
+                        Hapus Chat
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       );
-    });
+    };
+
+    return (
+      <>
+        {renderGroup("Hari Ini", groups.today)}
+        {renderGroup("Kemarin", groups.yesterday)}
+        {renderGroup("Sebelumnya", groups.older)}
+      </>
+    );
   }, [historyQuery, currentChatId, handleRenameClick, handleDeleteClick]);
 
   return (
