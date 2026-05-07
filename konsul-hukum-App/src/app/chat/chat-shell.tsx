@@ -280,7 +280,9 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    const groups = historyQuery.data.reduce((acc, chat) => {
+    const data = historyQuery.data || [];
+
+    const groups = data.reduce((acc, chat) => {
       const chatDate = new Date(chat.createdAt);
       chatDate.setHours(0, 0, 0, 0);
 
@@ -292,10 +294,10 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         acc.older.push(chat);
       }
       return acc;
-    }, { today: [], yesterday: [], older: [] } as Record<string, typeof historyQuery.data>);
+    }, { today: [], yesterday: [], older: [] } as Record<string, typeof data>);
 
-    const renderGroup = (title: string, chats: typeof historyQuery.data) => {
-      if (chats.length === 0) return null;
+    const renderGroup = (title: string, chats: typeof data | undefined) => {
+      if (!chats || chats.length === 0) return null;
 
       return (
         <div className="mb-6">
