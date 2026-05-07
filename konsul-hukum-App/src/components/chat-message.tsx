@@ -30,8 +30,12 @@ function SourcesDrawer({ sources }: { sources: Array<{ source: string; page?: nu
     <div className="flex flex-col gap-2 pl-2 mt-4">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2 cursor-pointer hover:text-gray-600 transition"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsOpen((prev) => !prev);
+        }}
+        className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2 cursor-pointer hover:text-gray-600 transition relative z-10"
       >
         <span>Referensi Dokumen (RAG)</span>
         <svg
@@ -264,14 +268,9 @@ export function ChatMessage({ message, isNew = false }: ChatMessageProps) {
           )}
 
           {/* Sources - Collapsible drawer (only shown after typewriter completes) */}
-          {message.role === "assistant" && !isAnimating && (() => {
-            const sourcesList = Array.isArray(message.sources) ? message.sources : [];
-            if (sourcesList.length === 0) return null;
-
-            return (
-              <SourcesDrawer sources={sourcesList} />
-            );
-          })()}
+          {message.role === "assistant" && !isAnimating && Array.isArray(message.sources) && message.sources.length > 0 && (
+            <SourcesDrawer sources={message.sources as Array<{ source: string; page?: number; snippet?: string }>} />
+          )}
         </div>
 
         {/* User Avatar - Right side for user */}
