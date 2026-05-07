@@ -81,17 +81,17 @@ export default function DirektoriPage() {
             </Link>
           </div>
 
-          {/* Toggle Tabs */}
-          <div className="flex items-center bg-white/60 backdrop-blur-md rounded-full p-1 shadow-sm border border-white/50">
+          {/* Back Button */}
+          <div className="flex items-center">
             <Link
               href="/chat"
-              className="px-4 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-gray-900 bg-white/60 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white transition-colors"
             >
-              Konsul Hukum
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              Kembali ke Chat
             </Link>
-            <div className="px-4 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-medium text-white bg-[#1A1A1A] shadow-sm">
-              Direktori
-            </div>
           </div>
 
           {/* User avatar dropdown */}

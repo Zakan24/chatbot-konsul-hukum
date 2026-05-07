@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { LogOut, Menu, X, Send, Loader2, MessageSquare, ChevronDown, MoreVertical } from "lucide-react";
+import { LogOut, Menu, X, Send, Loader2, MessageSquare, ChevronDown, MoreVertical, Scale } from "lucide-react";
 
 import { ChatMessage } from "@/components/chat-message";
 import { Button } from "@/components/ui/button";
@@ -472,7 +472,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
             {!hasActiveChat && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] text-center max-w-xl mx-auto px-4 mt-12">
                 <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6 shadow-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  <Scale className="w-8 h-8" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-3">
                   Konsultasi Hukum AI
@@ -500,7 +500,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
             {isAIThinking && (
               <div className="flex justify-start gap-3 items-start">
                 <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  <Scale className="w-4 h-4" />
                 </div>
                 <div className="bg-white border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] rounded-3xl rounded-tl-sm px-6 py-4 flex items-center gap-2">
                   <div className="flex gap-1">
