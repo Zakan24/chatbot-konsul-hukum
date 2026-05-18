@@ -33,45 +33,58 @@ export function useTypewriter(
   const [isAnimating, setIsAnimating] = useState(enabled)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const fullTextRef = useRef(fullText)
+  const hasStartedRef = useRef(false)
 
   // Keep ref in sync
   fullTextRef.current = fullText
 
-  // Start animation when enabled and text is available
+  // Clear any running timer
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+      timerRef.current = null
+    }
+  }, [])
+
+  // Start the animation interval
+  const startAnimation = useCallback(() => {
+    clearTimer()
+    hasStartedRef.current = true
+    setIsAnimating(true)
+
+    timerRef.current = setInterval(() => {
+      setDisplayLength((prev) => {
+        const next = prev + chunkSize
+        if (next >= fullTextRef.current.length) {
+          // Animation complete
+          if (timerRef.current) clearInterval(timerRef.current)
+          timerRef.current = null
+          setIsAnimating(false)
+          return fullTextRef.current.length
+        }
+        return next
+      })
+    }, speed)
+  }, [chunkSize, speed, clearTimer])
+
+  // Main animation effect
   useEffect(() => {
     if (!enabled) {
+      clearTimer()
       setDisplayLength(fullText.length)
       setIsAnimating(false)
+      hasStartedRef.current = false
       return
     }
 
-    // Start from 0 when first enabled with text
-    if (fullText.length > 0 && displayLength === 0) {
-      setIsAnimating(true)
-
-      timerRef.current = setInterval(() => {
-        setDisplayLength((prev) => {
-          const next = prev + chunkSize
-          if (next >= fullTextRef.current.length) {
-            // Animation complete
-            if (timerRef.current) clearInterval(timerRef.current)
-            setIsAnimating(false)
-            return fullTextRef.current.length
-          }
-          return next
-        })
-      }, speed)
+    // Start animation when enabled with text, and haven't started yet
+    if (fullText.length > 0 && !hasStartedRef.current) {
+      setDisplayLength(0)
+      startAnimation()
     }
 
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current)
-        timerRef.current = null
-      }
-    }
-    // Only run on mount/enabled change, not on every displayLength change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, fullText.length > 0])
+    return clearTimer
+  }, [enabled, fullText, startAnimation, clearTimer])
 
   // If text changes and we're done animating, update to full length
   useEffect(() => {
@@ -81,13 +94,11 @@ export function useTypewriter(
   }, [fullText, isAnimating])
 
   const skip = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current)
-      timerRef.current = null
-    }
+    clearTimer()
+    hasStartedRef.current = true
     setDisplayLength(fullTextRef.current.length)
     setIsAnimating(false)
-  }, [])
+  }, [clearTimer])
 
   return {
     displayText: fullText.slice(0, displayLength),
