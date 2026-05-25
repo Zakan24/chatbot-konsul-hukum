@@ -25,7 +25,7 @@ async function main() {
   console.log("🌱 Starting seed...");
 
   // Read the JSON data
-  const jsonPath = path.join(__dirname, "bpk_database.json");
+  const jsonPath = path.join(process.cwd(), "prisma", "bpk_database.json");
   const rawData = fs.readFileSync(jsonPath, "utf-8");
   const records: BpkRecord[] = JSON.parse(rawData) as BpkRecord[];
 
