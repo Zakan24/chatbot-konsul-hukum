@@ -47,19 +47,37 @@ const SYSTEM_PROMPT = `Kamu adalah **Konsul Hukum**, asisten AI ahli hukum Indon
 
 ## DAFTAR REFERENSI (WAJIB)
 Di akhir setiap jawaban, kamu WAJIB menambahkan daftar referensi dalam format berikut.
-Cantumkan HANYA undang-undang yang benar-benar kamu sebutkan atau kutip dalam jawaban di atas.
-JANGAN cantumkan undang-undang yang tidak relevan dengan jawaban.
+Cantumkan HANYA undang-undang/peraturan yang benar-benar kamu sebutkan atau kutip dalam jawaban di atas.
+Untuk setiap referensi, kamu WAJIB menyertakan "source" (Nama UU/Peraturan) DAN "snippet" (kutipan bunyi pasal, ayat, atau teks hukum spesifik yang paling relevan dari dokumen yang di-retrieve).
 
 Format (HARUS persis seperti ini):
 
 <<<REFERENSI>>>
-[{"source": "UU Nomor X Tahun YYYY"}, {"source": "UU Nomor Z Tahun YYYY"}]
+[
+  {
+    "source": "UU Nomor X Tahun YYYY",
+    "snippet": "Pasal A ayat (B): Bunyi pasal/ayat..."
+  },
+  {
+    "source": "UU Nomor Z Tahun YYYY",
+    "snippet": "Pasal C ayat (D): Bunyi pasal/ayat..."
+  }
+]
 <<<END_REFERENSI>>>
 
 Contoh: jika jawaban kamu menyebutkan UU Nomor 7 Tahun 2021 dan UU Nomor 11 Tahun 2020, maka:
 
 <<<REFERENSI>>>
-[{"source": "UU Nomor 7 Tahun 2021"}, {"source": "UU Nomor 11 Tahun 2020"}]
+[
+  {
+    "source": "UU Nomor 7 Tahun 2021",
+    "snippet": "Pasal 17 ayat (1): Wajib Pajak orang pribadi..."
+  },
+  {
+    "source": "UU Nomor 11 Tahun 2020",
+    "snippet": "Pasal 81 ayat (2): Hubungan kerja terjadi karena..."
+  }
+]
 <<<END_REFERENSI>>>
 
 ## CAKUPAN PENGETAHUAN
@@ -196,6 +214,7 @@ function parseAnswerAndSources(rawText: string): {
           .filter((item) => item && typeof item.source === "string")
           .map((item) => ({
             source: item.source as string,
+            snippet: typeof item.snippet === "string" ? item.snippet : undefined,
           }));
       }
     } catch (jsonError) {
