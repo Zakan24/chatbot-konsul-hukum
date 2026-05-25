@@ -23,30 +23,30 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   })
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-transparent">
       {/* Header */}
-      <header className="bg-primary text-primary-foreground border-b border-primary-foreground/10 px-4 md:px-6 py-4">
+      <header className="bg-transparent border-b border-white/20 px-4 md:px-8 py-4 shrink-0">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/admin/dashboard" className="flex items-center gap-2">
-              <div className="bg-primary-foreground/20 flex h-8 w-8 items-center justify-center rounded-md font-bold text-sm">
+              <div className="bg-[#1A1A1A] text-white flex h-8 w-8 items-center justify-center rounded-md font-bold text-sm">
                 KH
               </div>
-              <h1 className="text-lg font-bold hidden sm:block">Admin Panel</h1>
+              <h1 className="text-lg font-bold hidden sm:block text-[#1A1A1A]">Admin Panel</h1>
             </Link>
 
             {/* Nav */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-2">
               {navItems.map((item) => {
                 const isActive = pathname === item.href
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                        : "text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10"
+                        ? "bg-[#1A1A1A] text-white shadow-md"
+                        : "text-gray-700 hover:text-gray-900 bg-white/60 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white"
                     }`}
                   >
                     {item.label}
@@ -58,24 +58,24 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
           <button
             onClick={() => logoutMutation.mutate()}
-            className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-gray-900 bg-white/60 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white transition-colors cursor-pointer"
           >
-            Logout
+            Keluar
           </button>
         </div>
 
         {/* Mobile nav */}
-        <nav className="md:hidden flex items-center gap-1 mt-3 overflow-x-auto pb-1">
+        <nav className="md:hidden flex items-center gap-2 mt-3 overflow-x-auto pb-2 custom-scrollbar">
           {navItems.map((item) => {
             const isActive = pathname === item.href
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                    : "text-primary-foreground/70 hover:text-primary-foreground"
+                    ? "bg-[#1A1A1A] text-white shadow-sm"
+                    : "text-gray-700 bg-white/60 backdrop-blur-md border border-white/50 hover:bg-white"
                 }`}
               >
                 {item.label}
@@ -86,7 +86,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Content */}
-      <main className="flex-1 bg-background p-4 md:p-6">
+      <main className="flex-1 bg-transparent p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
           {children}
         </div>
