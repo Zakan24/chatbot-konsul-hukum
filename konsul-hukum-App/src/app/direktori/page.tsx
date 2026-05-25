@@ -344,7 +344,7 @@ export default function DirektoriPage() {
                     onClick={() => setPage(pageNum)}
                     className={`h-9 min-w-9 rounded-xl px-3 py-2 text-sm font-medium transition-all cursor-pointer shadow-sm ${
                       pageNum === page
-                        ? "bg-[#ca8a04] text-white border border-[#ca8a04]"
+                        ? "bg-[#1A1A1A] text-white border border-[#1A1A1A]"
                         : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
                     }`}
                   >
