@@ -9,18 +9,18 @@ import { Label } from '@/components/ui/label'
 
 type PeraturanForm = {
   id?: number
-  title: string
-  nomor: string
-  jenis: string
-  topik: string
+  judul: string
+  sub_judul: string
+  isi: string
+  tanggal_ditetapkan: string
+  tanggal_berlaku: string
+  kategori_hukum: string
+  url_bpk: string
   tahun: string
-  status: string
-  deskripsi: string
-  url: string
 }
 
 const emptyForm: PeraturanForm = {
-  title: '', nomor: '', jenis: '', topik: '', tahun: '', status: '', deskripsi: '', url: '',
+  judul: '', sub_judul: '', isi: '', tanggal_ditetapkan: '', tanggal_berlaku: '', kategori_hukum: '', url_bpk: '', tahun: '',
 }
 
 export default function AdminPeraturanPage() {
@@ -83,43 +83,43 @@ export default function AdminPeraturanPage() {
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <Label>Judul</Label>
-                <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required />
+                <Input value={form.judul} onChange={e => setForm({ ...form, judul: e.target.value })} required />
+              </div>
+              <div>
+                <Label>Sub Judul</Label>
+                <Input value={form.sub_judul} onChange={e => setForm({ ...form, sub_judul: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label>Nomor</Label>
-                  <Input value={form.nomor} onChange={e => setForm({ ...form, nomor: e.target.value })} required />
+                  <Label>Kategori Hukum</Label>
+                  <Input value={form.kategori_hukum} onChange={e => setForm({ ...form, kategori_hukum: e.target.value })} placeholder="Pidana / Perdata" />
                 </div>
                 <div>
                   <Label>Tahun</Label>
-                  <Input value={form.tahun} onChange={e => setForm({ ...form, tahun: e.target.value })} required />
+                  <Input value={form.tahun} onChange={e => setForm({ ...form, tahun: e.target.value })} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label>Jenis</Label>
-                  <Input value={form.jenis} onChange={e => setForm({ ...form, jenis: e.target.value })} required placeholder="Undang-undang" />
+                  <Label>Tanggal Ditetapkan</Label>
+                  <Input value={form.tanggal_ditetapkan} onChange={e => setForm({ ...form, tanggal_ditetapkan: e.target.value })} placeholder="01 Januari 2026" />
                 </div>
                 <div>
-                  <Label>Topik</Label>
-                  <Input value={form.topik} onChange={e => setForm({ ...form, topik: e.target.value })} required placeholder="PPh, PPN" />
+                  <Label>Tanggal Berlaku</Label>
+                  <Input value={form.tanggal_berlaku} onChange={e => setForm({ ...form, tanggal_berlaku: e.target.value })} placeholder="01 Januari 2026" />
                 </div>
               </div>
               <div>
-                <Label>Status</Label>
-                <Input value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} required placeholder="Berlaku" />
-              </div>
-              <div>
-                <Label>Deskripsi</Label>
+                <Label>Isi / Deskripsi</Label>
                 <textarea
-                  value={form.deskripsi}
-                  onChange={e => setForm({ ...form, deskripsi: e.target.value })}
+                  value={form.isi}
+                  onChange={e => setForm({ ...form, isi: e.target.value })}
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm min-h-[80px] focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
               <div>
-                <Label>URL</Label>
-                <Input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })} placeholder="https://..." />
+                <Label>URL BPK</Label>
+                <Input value={form.url_bpk} onChange={e => setForm({ ...form, url_bpk: e.target.value })} placeholder="https://peraturan.bpk.go.id/..." />
               </div>
               <div className="flex items-center justify-end gap-2 pt-2">
                 <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="cursor-pointer">
@@ -161,29 +161,27 @@ export default function AdminPeraturanPage() {
             <thead className="bg-primary text-primary-foreground">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Judul</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold">Nomor</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold">Topik</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold">Sub Judul</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold">Kategori</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Tahun</th>
                 <th className="px-4 py-3 text-center text-sm font-semibold">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {query.isLoading && (
-                <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Memuat data...</td></tr>
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Memuat data...</td></tr>
               )}
               {data?.items.map((item) => (
                 <tr key={item.id} className="hover:bg-muted/50 transition-colors">
                   <td className="px-4 py-3 text-sm font-medium max-w-[250px]">
-                    <span className="line-clamp-1">{item.title}</span>
+                    <span className="line-clamp-1">{item.judul}</span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground whitespace-nowrap">{item.nomor}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">{item.topik}</td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground max-w-[200px]">
+                    <span className="line-clamp-1">{item.sub_judul}</span>
+                  </td>
                   <td className="px-4 py-3 text-sm">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      item.status === 'Berlaku' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      {item.status.length > 15 ? item.status.slice(0, 15) + '...' : item.status}
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-blue-100 text-blue-700">
+                      {item.kategori_hukum || '-'}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-muted-foreground">{item.tahun}</td>
@@ -204,7 +202,7 @@ export default function AdminPeraturanPage() {
                 </tr>
               ))}
               {data?.items.length === 0 && (
-                <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Belum ada peraturan.</td></tr>
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Belum ada peraturan.</td></tr>
               )}
             </tbody>
           </table>

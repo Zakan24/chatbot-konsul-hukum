@@ -121,18 +121,17 @@ model Feedback {
 }
 
 model Peraturan {
-  id        Int      @id @default(autoincrement())
-  title     String
-  nomor     String   @unique
-  jenis     String   // "Undang-undang", etc.
-  topik     String   // "PPh", "PPN", "KUP", "PBB", "BPHTB", "Bea Meterai", "Other", etc.
-  tahun     String
-  status    String   // "Berlaku", "Diubah atau Disempurnakan", "Dicabut"
-  deskripsi String   @default("") @db.Text
-  url       String   @default("")
-  createdAt DateTime @default(now())
+  id                 Int      @id @default(autoincrement())
+  judul              String
+  sub_judul          String   @default("") @db.Text
+  isi                String   @default("") @db.Text
+  tanggal_ditetapkan String   @default("")
+  tanggal_berlaku    String   @default("")
+  kategori_hukum     String   @default("")
+  url_bpk            String   @default("")
+  tahun              String   @default("")
+  createdAt          DateTime @default(now())
 
-  @@index([jenis])
-  @@index([topik])
-  @@index([status])
+  @@index([kategori_hukum])
+  @@index([tahun])
 }

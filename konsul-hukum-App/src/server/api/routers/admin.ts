@@ -248,7 +248,7 @@ export const adminRouter = createTRPCRouter({
         ctx.db.peraturan.findMany({
           skip: (page - 1) * limit,
           take: limit,
-          orderBy: [{ tahun: "desc" }, { nomor: "asc" }],
+          orderBy: [{ tahun: "desc" }, { judul: "asc" }],
         }),
         ctx.db.peraturan.count(),
       ]);
@@ -260,14 +260,14 @@ export const adminRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number().optional(), // if provided, update; else create
-        title: z.string(),
-        nomor: z.string(),
-        jenis: z.string(),
-        topik: z.string(),
-        tahun: z.string(),
-        status: z.string(),
-        deskripsi: z.string().default(""),
-        url: z.string().default(""),
+        judul: z.string(),
+        sub_judul: z.string().default(""),
+        isi: z.string().default(""),
+        tanggal_ditetapkan: z.string().default(""),
+        tanggal_berlaku: z.string().default(""),
+        kategori_hukum: z.string().default(""),
+        url_bpk: z.string().default(""),
+        tahun: z.string().default(""),
       })
     )
     .mutation(async ({ ctx, input }) => {

@@ -19,6 +19,7 @@
     "preview": "next build && next start",
     "start": "next start",
     "test": "vitest",
+    "db:seed": "npx tsx prisma/seed.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
