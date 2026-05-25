@@ -62,6 +62,22 @@ export default function DirektoriPage() {
     setPage(1)
   }
 
+  const getPageNumbers = () => {
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    }
+
+    if (page <= 3) {
+      return [1, 2, 3, "...", totalPages]
+    }
+
+    if (page >= totalPages - 2) {
+      return [1, "...", totalPages - 2, totalPages - 1, totalPages]
+    }
+
+    return [1, "...", page - 1, page, page + 1, "...", totalPages]
+  }
+
   const hasActiveFilters = search || filterKategori || filterTahun
 
   return (
@@ -307,29 +323,40 @@ export default function DirektoriPage() {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="rounded-full border border-white/60 bg-white/60 backdrop-blur-md px-4 py-2 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white transition-all cursor-pointer shadow-sm"
+                className="h-9 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer shadow-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:text-gray-400 flex items-center justify-center"
               >
                 ← Sebelumnya
               </button>
 
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setPage(p)}
-                  className={`h-9 min-w-9 rounded-full px-3 py-2 text-sm font-medium transition-all cursor-pointer shadow-sm ${
-                    p === page
-                      ? "bg-[#1A1A1A] text-white"
-                      : "border border-white/60 bg-white/60 backdrop-blur-md hover:bg-white"
-                  }`}
-                >
-                  {p}
-                </button>
-              ))}
+              {getPageNumbers().map((p, idx) => {
+                if (p === "...") {
+                  return (
+                    <span key={`ellipsis-${idx}`} className="px-1 text-gray-400 font-medium">
+                      ...
+                    </span>
+                  )
+                }
+
+                const pageNum = p as number
+                return (
+                  <button
+                    key={`page-${pageNum}`}
+                    onClick={() => setPage(pageNum)}
+                    className={`h-9 min-w-9 rounded-xl px-3 py-2 text-sm font-medium transition-all cursor-pointer shadow-sm ${
+                      pageNum === page
+                        ? "bg-[#ca8a04] text-white border border-[#ca8a04]"
+                        : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                )
+              })}
 
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="rounded-full border border-white/60 bg-white/60 backdrop-blur-md px-4 py-2 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white transition-all cursor-pointer shadow-sm"
+                className="h-9 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer shadow-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:text-gray-400 flex items-center justify-center"
               >
                 Selanjutnya →
               </button>
