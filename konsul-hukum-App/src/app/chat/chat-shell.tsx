@@ -508,8 +508,8 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
                   <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shadow-md bg-white border border-gray-100">
                     <img src="/logo.png" alt="Company Logo" className="w-full h-full object-cover" />
                   </div>
-                  <div className="h-16 flex items-center justify-center">
-                    <img src="/logo_law_firm.png" alt="Law Firm Logo" className="h-14 object-contain" />
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shadow-md bg-white border border-gray-100 p-1">
+                    <img src="/logo_law_firm.png" alt="Law Firm Logo" className="w-full h-full object-contain" />
                   </div>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-3">
