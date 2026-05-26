@@ -451,7 +451,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         </div>
       </aside>
 
-      <div className="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] rounded-3xl md:rounded-[2.5rem] w-full max-w-[1400px] h-full md:h-[95vh] flex flex-col md:flex-row overflow-hidden relative">
+      <div className="bg-white border border-gray-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] rounded-3xl md:rounded-[2.5rem] w-full max-w-[1400px] h-full md:h-[95vh] flex flex-col md:flex-row overflow-hidden relative">
 
         {/* Mobile Header */}
         <header className="md:hidden h-16 flex items-center justify-between px-4 border-b border-gray-100/50 shrink-0 bg-white/50">
@@ -466,7 +466,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         </header>
 
         {/* Desktop Nav Kiri */}
-        <nav className="w-20 hidden md:flex flex-col items-center py-8 gap-6 border-r border-gray-100/50 shrink-0">
+        <nav className="w-20 hidden md:flex flex-col items-center py-8 gap-6 border-r border-gray-100 bg-gray-50/50 shrink-0">
           <div className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center shadow-lg mb-4 bg-white border border-gray-100">
             <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
           </div>
@@ -504,8 +504,13 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
           <div ref={scrollAreaRef} className="flex-1 overflow-y-auto px-4 md:px-8 lg:px-24 pt-4 pb-4 flex flex-col gap-6 scroll-smooth custom-scrollbar">
             {!hasActiveChat && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] text-center max-w-xl mx-auto px-4 mt-12">
-                <div className="w-16 h-16 bg-[#6B0B0C]/10 text-[#6B0B0C] rounded-full flex items-center justify-center mb-6 shadow-sm">
-                  <Scale className="w-8 h-8" />
+                <div className="flex items-center justify-center gap-4 mb-6">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center shadow-md bg-white border border-gray-100">
+                    <img src="/logo.png" alt="Company Logo" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="h-16 flex items-center justify-center">
+                    <img src="/logo_law_firm.png" alt="Law Firm Logo" className="h-14 object-contain" />
+                  </div>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-3">
                   Konsultasi Hukum AI
@@ -579,7 +584,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         </main>
 
         {/* Desktop Aside (Kanan) */}
-        <aside className="w-80 hidden md:flex bg-transparent border-l border-gray-100/80 p-6 flex-col shrink-0">
+        <aside className="w-80 hidden md:flex bg-gray-50/50 border-l border-gray-100 p-6 flex-col shrink-0">
           <button
             onClick={handleCreateChat}
             className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition mb-4 cursor-pointer"
