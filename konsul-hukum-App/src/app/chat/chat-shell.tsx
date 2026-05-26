@@ -505,9 +505,9 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
             {!hasActiveChat && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] text-center max-w-xl mx-auto px-4 mt-12">
                 <div className="flex items-center justify-center gap-6 mb-8">
-                  <img src="/logo.png" alt="Company Logo" className="w-36 h-36 object-contain shrink-0" />
+                  <img src="/logo.png" alt="Company Logo" className="w-24 h-24 object-contain shrink-0" />
                   <span className="text-gray-300 font-light text-2xl">×</span>
-                  <img src="/logo_law_firm.png" alt="Law Firm Logo" className="w-24 h-24 object-contain shrink-0" />
+                  <img src="/logo_law_firm.png" alt="Law Firm Logo" className="w-36 h-36 object-contain shrink-0" />
                 </div>
                 <h2 className="text-3xl md:text-4xl lg:text-[40px] font-bold text-gray-900 tracking-tight leading-tight max-w-2xl mx-auto mb-4">
                   Ada yang bisa dibantu terkait hukum hari ini?
