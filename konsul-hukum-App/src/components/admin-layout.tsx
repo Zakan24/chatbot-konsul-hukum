@@ -32,7 +32,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-white border border-gray-100 shadow-sm">
                 <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
               </div>
-              <h1 className="text-lg font-bold hidden sm:block text-[#6B0B0C]">Admin Panel</h1>
+              <h1 className="text-lg font-bold hidden sm:block text-white">Admin Panel</h1>
             </Link>
 
             {/* Nav */}
@@ -87,7 +87,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
       {/* Content */}
       <main className="flex-1 bg-transparent p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] rounded-3xl p-6 md:p-8">
           {children}
         </div>
       </main>

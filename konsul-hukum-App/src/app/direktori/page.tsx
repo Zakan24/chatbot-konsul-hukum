@@ -90,7 +90,7 @@ export default function DirektoriPage() {
               <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-white border border-gray-100 shadow-sm">
                 <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
               </div>
-              <h1 className="text-lg font-bold hidden sm:block text-[#6B0B0C]">Konsul Hukum</h1>
+              <h1 className="text-lg font-bold hidden sm:block text-white">Konsul Hukum</h1>
             </Link>
           </div>
 
@@ -212,7 +212,7 @@ export default function DirektoriPage() {
 
           {/* Results count */}
           <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-gray-500 font-medium">
+            <p className="text-sm text-white/80 font-medium">
               {peraturanQuery.isLoading
                 ? "Memuat data peraturan..."
                 : `Menampilkan ${peraturanList.length} dari ${totalCount} Peraturan`}
