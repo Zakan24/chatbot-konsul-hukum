@@ -83,14 +83,14 @@ export default function DirektoriPage() {
   return (
     <div className="flex h-screen flex-col bg-transparent">
       {/* Header */}
-      <header className="bg-transparent px-4 md:px-8 lg:px-24 py-4 shrink-0 border-b border-white/20">
+      <header className="bg-white px-4 md:px-8 lg:px-24 py-4 shrink-0 border-b border-gray-100 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-white border border-gray-100 shadow-sm">
                 <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
               </div>
-              <h1 className="text-lg font-bold hidden sm:block text-white">Konsul Hukum</h1>
+              <h1 className="text-lg font-bold hidden sm:block text-[#6B0B0C]">Konsul Hukum</h1>
             </Link>
           </div>
 
@@ -169,8 +169,7 @@ export default function DirektoriPage() {
             </div>
             <button
               onClick={handleSearch}
-              className="flex items-center gap-2 rounded-full px-6 md:px-8 py-3 text-sm font-medium text-white transition-all cursor-pointer hover:opacity-90 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-              style={{ backgroundColor: '#6B0B0C' }}
+              className="flex items-center gap-2 rounded-full px-6 md:px-8 py-3 text-sm font-semibold text-black bg-white hover:bg-gray-50 border border-gray-200 transition-all cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
             >
               Cari
             </button>

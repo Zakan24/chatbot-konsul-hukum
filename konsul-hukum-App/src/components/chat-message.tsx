@@ -58,16 +58,15 @@ function SourcesDrawer({ sources }: { sources: Array<{ source: string; page?: nu
       {isOpen && (
         <div className="space-y-3 mt-2">
           {sources.map((source, idx) => (
-            <div key={idx} className="bg-gradient-to-r from-[#CA8A04]/5 to-[#CA8A04]/10 border border-[#CA8A04]/20 rounded-2xl p-4 shadow-sm relative overflow-hidden group hover:shadow-md transition">
-              <div className="absolute top-0 left-0 w-1 h-full bg-[#CA8A04]"></div>
+            <div key={idx} className="bg-black border-2 border-[#CA8A04] rounded-2xl p-4 shadow-md relative overflow-hidden group hover:shadow-lg transition">
               <div className="flex gap-3 items-center mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#CA8A04]">
                   <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
                 </svg>
-                <h4 className="font-semibold text-gray-800 text-sm">{source.source}</h4>
+                <h4 className="font-semibold text-white text-sm">{source.source}</h4>
               </div>
               {source.snippet && (
-                <p className="text-sm text-gray-600 italic leading-relaxed">
+                <p className="text-sm text-gray-300 italic leading-relaxed">
                   "{source.snippet}"
                 </p>
               )}

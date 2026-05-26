@@ -23,6 +23,39 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { api, type RouterOutputs } from "nvn/trpc/react";
 import { type SourceCitation } from "nvn/server/ai/chat-agent";
 
+function ThinkingIndicator() {
+  const [statusIndex, setStatusIndex] = useState(0);
+  const statuses = [
+    "Menganalisis Pertanyaan...",
+    "Mencari Referensi Peraturan...",
+    "Menyusun Analisis Hukum...",
+    "Menyiapkan Jawaban Akhir..."
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStatusIndex((prev) => (prev + 1) % statuses.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex justify-start gap-3 items-start">
+      <div className="w-8 h-8 rounded-full bg-[#6B0B0C]/10 text-[#6B0B0C] flex items-center justify-center shrink-0 mt-2">
+        <Scale className="w-4 h-4 animate-pulse" />
+      </div>
+      <div className="bg-white border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] rounded-3xl rounded-tl-sm px-6 py-4 flex items-center gap-3">
+        <div className="flex gap-1 shrink-0">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce [animation-delay:-0.3s]"></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce [animation-delay:-0.15s]"></div>
+          <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce"></div>
+        </div>
+        <span className="text-sm font-semibold text-gray-600 animate-pulse">{statuses[statusIndex]}</span>
+      </div>
+    </div>
+  );
+}
+
 interface ChatShellProps {
   initialChatId: string | null;
 }
@@ -268,7 +301,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
 
     if (historyQuery.isSuccess && historyQuery.data.length === 0) {
       return (
-        <div className="text-sidebar-foreground/60 p-3 text-xs">
+        <div className="text-black font-medium p-3 text-xs">
           Belum ada riwayat percakapan. Mulai percakapan baru untuk memulai.
         </div>
       );
@@ -462,7 +495,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         </nav>
 
         {/* Main Tengah */}
-        <main className="flex-1 flex flex-col relative h-full w-full overflow-hidden">
+        <main className="flex-1 flex flex-col relative h-full w-full overflow-hidden bg-white">
           {/* Desktop Header */}
           <header className="hidden md:flex h-20 items-center justify-center shrink-0">
             <h1 className="text-[#6B0B0C] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
@@ -497,20 +530,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
               <ChatMessage key={msg.id} message={msg as RouterOutputs["chat"]["messages"][number]} />
             ))}
 
-            {isAIThinking && (
-              <div className="flex justify-start gap-3 items-start">
-                <div className="w-8 h-8 rounded-full bg-[#6B0B0C]/10 text-[#6B0B0C] flex items-center justify-center shrink-0 mt-2">
-                  <Scale className="w-4 h-4" />
-                </div>
-                <div className="bg-white border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] rounded-3xl rounded-tl-sm px-6 py-4 flex items-center gap-2">
-                  <div className="flex gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce"></div>
-                  </div>
-                </div>
-              </div>
-            )}
+            {isAIThinking && <ThinkingIndicator />}
 
             {hasActiveChat && messagesQuery.isError && (
               <div className="text-red-500 py-8 text-center text-sm">
@@ -559,7 +579,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         </main>
 
         {/* Desktop Aside (Kanan) */}
-        <aside className="w-80 hidden md:flex bg-gray-50/50 border-l border-gray-100/80 p-6 flex-col shrink-0">
+        <aside className="w-80 hidden md:flex bg-transparent border-l border-gray-100/80 p-6 flex-col shrink-0">
           <button
             onClick={handleCreateChat}
             className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition mb-4 cursor-pointer"
