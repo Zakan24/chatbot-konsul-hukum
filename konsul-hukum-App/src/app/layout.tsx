@@ -13,7 +13,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Konsul Hukum - Asisten AI Hukum",
   description: "Chatbot AI untuk konsultasi hukum Indonesia",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/favicon.png", type: "image/png" }],
 };
 
 export default function RootLayout({

@@ -384,8 +384,8 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
       `}>
         <div className="p-4 border-b border-gray-100 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1A1A1A] to-[#404040] text-white flex items-center justify-center font-bold shadow-sm">
-              KH
+            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-sm bg-white border border-gray-100">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <span className="font-semibold text-gray-800">Konsul Hukum</span>
           </div>
@@ -434,8 +434,8 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
 
         {/* Desktop Nav Kiri */}
         <nav className="w-20 hidden md:flex flex-col items-center py-8 gap-6 border-r border-gray-100/50 shrink-0">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#1A1A1A] to-[#404040] text-white flex items-center justify-center font-bold text-xl shadow-lg mb-4">
-            KH
+          <div className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center shadow-lg mb-4 bg-white border border-gray-100">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <div className="mt-auto">
             <DropdownMenu>

@@ -237,8 +237,8 @@ export default function LoginPage() {
         <div className="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] rounded-[2.5rem] space-y-6 p-8">
           {/* Header */}
           <div className="space-y-2 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1A1A1A] to-[#404040] text-white flex items-center justify-center font-bold text-2xl shadow-lg mx-auto mb-4">
-              KH
+            <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center mx-auto mb-4 bg-white border border-gray-100 shadow-md">
+              <img src="/logo.png" alt="Konsul Hukum Logo" className="w-full h-full object-cover" />
             </div>
             <h1 className="text-[#1A1A1A] text-2xl font-bold">
               {flowState === "email" ? "Login Konsul Hukum" : "Verifikasi Email"}

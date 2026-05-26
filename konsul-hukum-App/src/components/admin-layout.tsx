@@ -29,8 +29,8 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/admin/dashboard" className="flex items-center gap-2">
-              <div className="bg-[#1A1A1A] text-white flex h-8 w-8 items-center justify-center rounded-md font-bold text-sm">
-                KH
+              <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-white border border-gray-100 shadow-sm">
+                <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
               </div>
               <h1 className="text-lg font-bold hidden sm:block text-[#1A1A1A]">Admin Panel</h1>
             </Link>

@@ -36,8 +36,8 @@ export default function AdminLoginPage() {
         <div className="bg-card rounded-xl shadow-lg border border-border p-8 space-y-6">
           {/* Header */}
           <div className="text-center space-y-2">
-            <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4 text-primary-foreground font-bold text-2xl">
-              KH
+            <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center mx-auto mb-4 bg-white border border-gray-100 shadow-md">
+              <img src="/logo.png" alt="Konsul Hukum Logo" className="w-full h-full object-cover" />
             </div>
             <h1 className="text-2xl font-bold text-primary">Admin Login</h1>
             <p className="text-sm text-muted-foreground">Akses panel administrasi Konsul Hukum</p>
