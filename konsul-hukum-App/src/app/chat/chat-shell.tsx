@@ -362,7 +362,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
   }, [historyQuery, currentChatId, handleRenameClick, handleDeleteClick]);
 
   return (
-    <div className="bg-gradient-to-br from-[#E2EAFB] via-[#F3E7F8] to-[#E2F1F8] h-screen w-screen flex items-center justify-center p-2 md:p-4 overflow-hidden">
+    <div className="bg-transparent h-screen w-screen flex items-center justify-center p-2 md:p-4 overflow-hidden">
       
       {/* Mobile overlay */}
       {isSidebarOpen && (
@@ -401,7 +401,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
             }}
             className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-[#CA8A04]">
               <path d="M5 12h14"/><path d="M12 5v14"/>
             </svg>
             Chat Baru
@@ -425,7 +425,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
           <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
             <Menu className="h-6 w-6" />
           </Button>
-          <h1 className="text-[#1A1A1A] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
+          <h1 className="text-[#6B0B0C] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
           <Avatar className="h-8 w-8">
             <AvatarImage src={session?.user?.image ?? ""} />
             <AvatarFallback>{session?.user?.name?.charAt(0) ?? "U"}</AvatarFallback>
@@ -440,7 +440,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
           <div className="mt-auto">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 text-white flex items-center justify-center font-bold text-sm shadow-md cursor-pointer outline-none hover:opacity-90 transition">
+                <button className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#6B0B0C] to-[#CA8A04] text-white flex items-center justify-center font-bold text-sm shadow-md cursor-pointer outline-none hover:opacity-90 transition">
                   {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
                 </button>
               </DropdownMenuTrigger>
@@ -465,13 +465,13 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         <main className="flex-1 flex flex-col relative h-full w-full overflow-hidden">
           {/* Desktop Header */}
           <header className="hidden md:flex h-20 items-center justify-center shrink-0">
-            <h1 className="text-[#1A1A1A] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
+            <h1 className="text-[#6B0B0C] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
           </header>
 
           <div ref={scrollAreaRef} className="flex-1 overflow-y-auto px-4 md:px-8 lg:px-24 pt-4 pb-4 flex flex-col gap-6 scroll-smooth custom-scrollbar">
             {!hasActiveChat && (
               <div className="flex flex-col items-center justify-center min-h-[50vh] text-center max-w-xl mx-auto px-4 mt-12">
-                <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <div className="w-16 h-16 bg-[#6B0B0C]/10 text-[#6B0B0C] rounded-full flex items-center justify-center mb-6 shadow-sm">
                   <Scale className="w-8 h-8" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-3">
@@ -499,14 +499,14 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
 
             {isAIThinking && (
               <div className="flex justify-start gap-3 items-start">
-                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-2">
+                <div className="w-8 h-8 rounded-full bg-[#6B0B0C]/10 text-[#6B0B0C] flex items-center justify-center shrink-0 mt-2">
                   <Scale className="w-4 h-4" />
                 </div>
                 <div className="bg-white border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] rounded-3xl rounded-tl-sm px-6 py-4 flex items-center gap-2">
                   <div className="flex gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#CA8A04] animate-bounce"></div>
                   </div>
                 </div>
               </div>
@@ -524,7 +524,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
           {/* Input Area */}
           <div className="w-full px-4 md:px-8 lg:px-24 flex justify-center pb-4 md:pb-8 pt-2 shrink-0 z-10">
             <form onSubmit={handleSubmit} className="w-full max-w-3xl">
-              <div className="bg-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] border border-gray-100 rounded-full flex items-center px-2 py-2 md:px-4 md:py-3 transition-all focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-300">
+              <div className="bg-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] border border-gray-100 rounded-full flex items-center px-2 py-2 md:px-4 md:py-3 transition-all focus-within:ring-2 focus-within:ring-[#CA8A04]/20 focus-within:border-[#CA8A04]/50">
                 <Textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -542,7 +542,7 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
                 <button
                   type="submit"
                   disabled={isComposerBusy || !message.trim()}
-                  className="w-10 h-10 shrink-0 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center hover:bg-gray-800 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed ml-2 cursor-pointer"
+                  className="w-10 h-10 shrink-0 rounded-full bg-[#6B0B0C] text-white flex items-center justify-center hover:bg-[#520809] transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed ml-2 cursor-pointer"
                 >
                   {isComposerBusy ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -564,20 +564,20 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
             onClick={handleCreateChat}
             className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition mb-4 cursor-pointer"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-[#CA8A04]">
               <path d="M5 12h14"/><path d="M12 5v14"/>
             </svg>
             Chat Baru
           </button>
           
           <div className="flex flex-col gap-3 mb-4">
-            <Link href="/direktori" className="w-full bg-indigo-600 text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-indigo-700 transition cursor-pointer">
+            <Link href="/direktori" className="w-full bg-[#CA8A04] text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-[#b57c03] transition cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>
               <span>Direktori Peraturan</span>
             </Link>
           </div>
 
-          <button className="w-full bg-[#1A1A1A] text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-gray-800 transition mb-6 cursor-pointer">
+          <button className="w-full bg-[#6B0B0C] text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-[#520809] transition mb-6 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
             Konsultasi Langsung
           </button>

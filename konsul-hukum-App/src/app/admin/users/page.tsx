@@ -47,7 +47,7 @@ export default function AdminUsersPage() {
                       {user.image ? (
                         <img src={user.image} alt="" className="h-7 w-7 rounded-full border border-gray-100 shadow-sm" />
                       ) : (
-                        <div className="h-7 w-7 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center text-xs font-bold shadow-sm">
+                        <div className="h-7 w-7 rounded-full bg-[#6B0B0C] text-white flex items-center justify-center text-xs font-bold shadow-sm">
                           {user.name?.charAt(0)?.toUpperCase() ?? '?'}
                         </div>
                       )}
@@ -56,7 +56,7 @@ export default function AdminUsersPage() {
                   </td>
                   <td className="px-5 py-4 text-sm text-gray-500 font-medium">{user.email ?? '-'}</td>
                   <td className="px-5 py-4 text-sm text-center">
-                    <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-blue-50 text-blue-700 border border-blue-100/30">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-[#CA8A04]/10 text-[#CA8A04] border border-[#CA8A04]/20">
                       {user._count.chats} chat
                     </span>
                   </td>

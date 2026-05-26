@@ -73,7 +73,7 @@ export default function AdminPeraturanPage() {
         </div>
         <button
           onClick={() => { setForm(emptyForm); setShowForm(true) }}
-          className="flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white bg-[#1A1A1A] hover:bg-gray-800 transition-all shadow-md transform hover:-translate-y-0.5 cursor-pointer self-start sm:self-auto"
+          className="flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white bg-[#6B0B0C] hover:bg-gray-800 transition-all shadow-md transform hover:-translate-y-0.5 cursor-pointer self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>Tambah Peraturan</span>
@@ -85,7 +85,7 @@ export default function AdminPeraturanPage() {
         <div className="fixed inset-0 z-50 bg-black/35 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white/95 backdrop-blur-xl border border-white/80 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col custom-scrollbar">
             <div className="flex items-center gap-2 mb-4 border-b border-gray-100 pb-3">
-              <BookOpen className="w-5 h-5 text-[#1A1A1A]" />
+              <BookOpen className="w-5 h-5 text-[#6B0B0C]" />
               <h3 className="text-lg font-bold text-gray-900">{form.id ? 'Edit Peraturan' : 'Tambah Peraturan baru'}</h3>
             </div>
             
@@ -97,7 +97,7 @@ export default function AdminPeraturanPage() {
                   onChange={e => setForm({ ...form, judul: e.target.value })} 
                   placeholder="e.g. Undang-Undang Nomor 7 Tahun 2021"
                   required 
-                  className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all text-sm h-10 px-3.5"
+                  className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 transition-all text-sm h-10 px-3.5"
                 />
               </div>
               
@@ -107,7 +107,7 @@ export default function AdminPeraturanPage() {
                   value={form.sub_judul} 
                   onChange={e => setForm({ ...form, sub_judul: e.target.value })} 
                   placeholder="e.g. Harmonisasi Peraturan Perpajakan"
-                  className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all text-sm h-10 px-3.5"
+                  className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 transition-all text-sm h-10 px-3.5"
                 />
               </div>
               
@@ -118,7 +118,7 @@ export default function AdminPeraturanPage() {
                     value={form.kategori_hukum} 
                     onChange={e => setForm({ ...form, kategori_hukum: e.target.value })} 
                     placeholder="e.g. Pajak / Pidana" 
-                    className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all text-sm h-10 px-3.5"
+                    className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 transition-all text-sm h-10 px-3.5"
                   />
                 </div>
                 <div>
@@ -127,7 +127,7 @@ export default function AdminPeraturanPage() {
                     value={form.tahun} 
                     onChange={e => setForm({ ...form, tahun: e.target.value })} 
                     placeholder="e.g. 2021"
-                    className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all text-sm h-10 px-3.5"
+                    className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 transition-all text-sm h-10 px-3.5"
                   />
                 </div>
               </div>
@@ -139,7 +139,7 @@ export default function AdminPeraturanPage() {
                     value={form.tanggal_ditetapkan} 
                     onChange={e => setForm({ ...form, tanggal_ditetapkan: e.target.value })} 
                     placeholder="e.g. 29 Oktober 2021" 
-                    className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all text-sm h-10 px-3.5"
+                    className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 transition-all text-sm h-10 px-3.5"
                   />
                 </div>
                 <div>
@@ -148,7 +148,7 @@ export default function AdminPeraturanPage() {
                     value={form.tanggal_berlaku} 
                     onChange={e => setForm({ ...form, tanggal_berlaku: e.target.value })} 
                     placeholder="e.g. 29 Oktober 2021" 
-                    className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all text-sm h-10 px-3.5"
+                    className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 transition-all text-sm h-10 px-3.5"
                   />
                 </div>
               </div>
@@ -159,7 +159,7 @@ export default function AdminPeraturanPage() {
                   value={form.isi}
                   onChange={e => setForm({ ...form, isi: e.target.value })}
                   placeholder="Tuliskan intisari atau bunyi peraturan di sini..."
-                  className="w-full rounded-xl border border-gray-200/80 bg-white px-3.5 py-2.5 text-sm min-h-[90px] focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all custom-scrollbar leading-relaxed"
+                  className="w-full rounded-xl border border-gray-200/80 bg-white px-3.5 py-2.5 text-sm min-h-[90px] focus:outline-none focus:ring-4 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 transition-all custom-scrollbar leading-relaxed"
                 />
               </div>
               
@@ -169,7 +169,7 @@ export default function AdminPeraturanPage() {
                   value={form.url_bpk} 
                   onChange={e => setForm({ ...form, url_bpk: e.target.value })} 
                   placeholder="https://peraturan.bpk.go.id/..." 
-                  className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all text-sm h-10 px-3.5"
+                  className="rounded-xl border border-gray-200/80 bg-white focus:ring-4 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 transition-all text-sm h-10 px-3.5"
                 />
               </div>
               
@@ -184,7 +184,7 @@ export default function AdminPeraturanPage() {
                 <button 
                   type="submit" 
                   disabled={upsertMutation.isPending}
-                  className="px-5 py-2 rounded-full text-xs font-semibold bg-[#1A1A1A] hover:bg-gray-800 text-white transition shadow-sm cursor-pointer disabled:opacity-40"
+                  className="px-5 py-2 rounded-full text-xs font-semibold bg-[#6B0B0C] hover:bg-gray-800 text-white transition shadow-sm cursor-pointer disabled:opacity-40"
                 >
                   {upsertMutation.isPending ? 'Menyimpan...' : 'Simpan'}
                 </button>
@@ -249,7 +249,7 @@ export default function AdminPeraturanPage() {
                     <span className="line-clamp-1">{item.sub_judul || '-'}</span>
                   </td>
                   <td className="px-5 py-4 text-sm">
-                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100/30">
+                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#CA8A04]/10 text-[#CA8A04] border border-[#CA8A04]/20">
                       {item.kategori_hukum || '-'}
                     </span>
                   </td>
@@ -257,7 +257,7 @@ export default function AdminPeraturanPage() {
                   <td className="px-5 py-4 text-sm text-center whitespace-nowrap">
                     <button
                       onClick={() => handleEdit(item)}
-                      className="text-blue-600 hover:text-blue-700 font-semibold hover:underline text-xs cursor-pointer mr-4"
+                      className="text-[#CA8A04] hover:text-[#b57c03] font-semibold hover:underline text-xs cursor-pointer mr-4"
                     >
                       Edit
                     </button>

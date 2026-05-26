@@ -6,12 +6,12 @@ import { Users, MessageCircle, FileText, ThumbsUp, ThumbsDown, Scale } from 'luc
 import Link from 'next/link'
 
 const statCards = [
-  { key: 'users', label: 'Total Pengguna', icon: Users, color: 'text-white', bg: 'bg-[#1A1A1A]' },
-  { key: 'chats', label: 'Total Chat', icon: MessageCircle, color: 'text-white', bg: 'bg-[#1A1A1A]' },
-  { key: 'messages', label: 'Total Pesan', icon: FileText, color: 'text-white', bg: 'bg-[#1A1A1A]' },
+  { key: 'users', label: 'Total Pengguna', icon: Users, color: 'text-white', bg: 'bg-[#6B0B0C]' },
+  { key: 'chats', label: 'Total Chat', icon: MessageCircle, color: 'text-white', bg: 'bg-[#6B0B0C]' },
+  { key: 'messages', label: 'Total Pesan', icon: FileText, color: 'text-white', bg: 'bg-[#6B0B0C]' },
   { key: 'feedbackSuka', label: 'Feedback Suka', icon: ThumbsUp, color: 'text-emerald-700', bg: 'bg-emerald-50 border border-emerald-100/50' },
   { key: 'feedbackTidakSuka', label: 'Feedback Tidak Suka', icon: ThumbsDown, color: 'text-rose-700', bg: 'bg-rose-50 border border-rose-100/50' },
-  { key: 'peraturan', label: 'Total Peraturan', icon: Scale, color: 'text-white', bg: 'bg-[#1A1A1A]' },
+  { key: 'peraturan', label: 'Total Peraturan', icon: Scale, color: 'text-white', bg: 'bg-[#6B0B0C]' },
 ] as const
 
 export default function AdminDashboardPage() {
@@ -61,9 +61,9 @@ export default function AdminDashboardPage() {
         <div className="bg-white/80 backdrop-blur-md border border-white/60 rounded-2xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.05)] transition-all duration-300">
           <div className="p-5 border-b border-gray-100 flex items-center justify-between">
             <h3 className="font-bold text-gray-800 flex items-center gap-2 text-sm md:text-base">
-              <MessageCircle className="w-4 h-4 text-blue-500" /> Chat Terbaru
+              <MessageCircle className="w-4 h-4 text-[#CA8A04]" /> Chat Terbaru
             </h3>
-            <Link href="/admin/chats" className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline">Lihat Semua</Link>
+            <Link href="/admin/chats" className="text-xs font-medium text-[#CA8A04] hover:text-[#b57c03] hover:underline">Lihat Semua</Link>
           </div>
           <div className="p-5 flex-1">
             {recentChatsQuery.isLoading ? (
@@ -82,7 +82,7 @@ export default function AdminDashboardPage() {
                       <p className="text-xs text-gray-400">
                         {new Date(chat.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric' })}
                       </p>
-                      <span className="text-[10px] font-semibold bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full inline-block mt-1 border border-blue-100/30">
+                      <span className="text-[10px] font-semibold bg-[#CA8A04]/10 text-[#CA8A04] px-2.5 py-0.5 rounded-full inline-block mt-1 border border-[#CA8A04]/20">
                         {chat._count.messages} pesan
                       </span>
                     </div>
@@ -99,7 +99,7 @@ export default function AdminDashboardPage() {
             <h3 className="font-bold text-gray-800 flex items-center gap-2 text-sm md:text-base">
               <ThumbsUp className="w-4 h-4 text-emerald-500" /> Feedback Terbaru
             </h3>
-            <Link href="/admin/feedback" className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline">Lihat Semua</Link>
+            <Link href="/admin/feedback" className="text-xs font-medium text-[#CA8A04] hover:text-[#b57c03] hover:underline">Lihat Semua</Link>
           </div>
           <div className="p-5 flex-1">
             {recentFeedbackQuery.isLoading ? (

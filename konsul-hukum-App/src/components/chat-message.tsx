@@ -58,10 +58,10 @@ function SourcesDrawer({ sources }: { sources: Array<{ source: string; page?: nu
       {isOpen && (
         <div className="space-y-3 mt-2">
           {sources.map((source, idx) => (
-            <div key={idx} className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-4 shadow-sm relative overflow-hidden group hover:shadow-md transition">
-              <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+            <div key={idx} className="bg-gradient-to-r from-[#CA8A04]/5 to-[#CA8A04]/10 border border-[#CA8A04]/20 rounded-2xl p-4 shadow-sm relative overflow-hidden group hover:shadow-md transition">
+              <div className="absolute top-0 left-0 w-1 h-full bg-[#CA8A04]"></div>
               <div className="flex gap-3 items-center mb-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#CA8A04]">
                   <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
                 </svg>
                 <h4 className="font-semibold text-gray-800 text-sm">{source.source}</h4>
@@ -165,7 +165,7 @@ export function ChatMessage({ message, isNew = false }: ChatMessageProps) {
       <div className={`flex gap-3 items-start ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
         {/* AI Avatar - Left side for assistant */}
         {message.role === 'assistant' && (
-          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-2">
+          <div className="w-8 h-8 rounded-full bg-[#6B0B0C]/10 text-[#6B0B0C] flex items-center justify-center shrink-0 mt-2">
             <Scale className="w-4 h-4" />
           </div>
         )}
@@ -174,7 +174,7 @@ export function ChatMessage({ message, isNew = false }: ChatMessageProps) {
           {/* Message Bubble */}
           <div
             className={`px-6 py-4 shadow-sm ${message.role === 'user'
-              ? 'bg-[#1A1A1A] text-white rounded-3xl rounded-tr-sm'
+              ? 'bg-[#6B0B0C] text-white rounded-3xl rounded-tr-sm'
               : 'bg-white border border-gray-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] rounded-3xl rounded-tl-sm'
               }`}
           >
@@ -276,7 +276,7 @@ export function ChatMessage({ message, isNew = false }: ChatMessageProps) {
 
         {/* User Avatar - Right side for user */}
         {message.role === 'user' && (
-          <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-white shrink-0 mt-2">
+          <div className="w-8 h-8 rounded-full bg-[#CA8A04] flex items-center justify-center text-white shrink-0 mt-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
         )}
