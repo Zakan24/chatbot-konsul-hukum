@@ -240,7 +240,7 @@ export default function LoginPage() {
             <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center mx-auto mb-4 bg-white border border-gray-100 shadow-md">
               <img src="/logo.png" alt="Konsul Hukum Logo" className="w-full h-full object-cover" />
             </div>
-            <h1 className="text-[#6B0B0C] text-2xl font-bold">
+            <h1 className="text-[#1C2544] text-2xl font-bold">
               {flowState === "email" ? "Login Konsul Hukum" : "Verifikasi Email"}
             </h1>
             <p className="text-gray-500 text-sm">
@@ -321,7 +321,7 @@ export default function LoginPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#6B0B0C] text-white rounded-2xl py-6 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-[#520809] transition cursor-pointer"
+                  className="w-full bg-[#1C2544] text-white rounded-2xl py-6 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-[#13192F] transition cursor-pointer"
                   disabled={isLoading}
                 >
                   {isLoading ? "Mengirim..." : "Login dengan Email"}
@@ -376,7 +376,7 @@ export default function LoginPage() {
           )}
 
           <div className="text-center">
-            <Link href="/" className="text-[#CA8A04] hover:text-[#b57c03] text-sm hover:underline">
+            <Link href="/" className="text-[#D3BA78] hover:text-[#B89E5F] text-sm hover:underline">
               Kembali ke Halaman Utama
             </Link>
           </div>

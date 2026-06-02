@@ -46,7 +46,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                     href={item.href}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? "bg-[#6B0B0C] text-white shadow-md"
+                        ? "bg-[#1C2544] text-white shadow-md"
                         : "text-gray-700 hover:text-gray-900 bg-white/60 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white"
                     }`}
                   >
@@ -75,7 +75,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? "bg-[#6B0B0C] text-white shadow-sm"
+                    ? "bg-[#1C2544] text-white shadow-sm"
                     : "text-gray-700 bg-white/60 backdrop-blur-md border border-white/50 hover:bg-white"
                 }`}
               >

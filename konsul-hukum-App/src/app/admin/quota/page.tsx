@@ -74,7 +74,7 @@ export default function AdminQuotaPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-950 flex items-center gap-2">
-            <Settings className="h-6 w-6 text-[#6B0B0C]" />
+            <Settings className="h-6 w-6 text-[#1C2544]" />
             Manajemen Quota & Kredit
           </h2>
           <p className="text-sm text-gray-500 mt-1">
@@ -88,23 +88,23 @@ export default function AdminQuotaPage() {
         <button
           onClick={() => setActiveTab("config")}
           className={`pb-3 text-sm font-medium transition-colors relative ${
-            activeTab === "config" ? "text-[#6B0B0C]" : "text-gray-500 hover:text-gray-900"
+            activeTab === "config" ? "text-[#1C2544]" : "text-gray-500 hover:text-gray-900"
           }`}
         >
           Konfigurasi Global
           {activeTab === "config" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6B0B0C] rounded-t-full" />
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1C2544] rounded-t-full" />
           )}
         </button>
         <button
           onClick={() => setActiveTab("users")}
           className={`pb-3 text-sm font-medium transition-colors relative ${
-            activeTab === "users" ? "text-[#6B0B0C]" : "text-gray-500 hover:text-gray-900"
+            activeTab === "users" ? "text-[#1C2544]" : "text-gray-500 hover:text-gray-900"
           }`}
         >
           Kredit Pengguna
           {activeTab === "users" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6B0B0C] rounded-t-full" />
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1C2544] rounded-t-full" />
           )}
         </button>
       </div>
@@ -127,7 +127,7 @@ export default function AdminQuotaPage() {
                     value={configForm.defaultCredits}
                     onChange={(e) => setConfigForm({ ...configForm, defaultCredits: parseInt(e.target.value) || 0 })}
                     disabled={!editingConfig}
-                    className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-[#CA8A04] focus:ring-1 focus:ring-[#CA8A04] disabled:bg-gray-50 disabled:text-gray-500 text-sm"
+                    className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-[#D3BA78] focus:ring-1 focus:ring-[#D3BA78] disabled:bg-gray-50 disabled:text-gray-500 text-sm"
                   />
                 </div>
 
@@ -141,7 +141,7 @@ export default function AdminQuotaPage() {
                     value={configForm.guestMessageLimit}
                     onChange={(e) => setConfigForm({ ...configForm, guestMessageLimit: parseInt(e.target.value) || 0 })}
                     disabled={!editingConfig}
-                    className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-[#CA8A04] focus:ring-1 focus:ring-[#CA8A04] disabled:bg-gray-50 disabled:text-gray-500 text-sm"
+                    className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-[#D3BA78] focus:ring-1 focus:ring-[#D3BA78] disabled:bg-gray-50 disabled:text-gray-500 text-sm"
                   />
                 </div>
 
@@ -155,7 +155,7 @@ export default function AdminQuotaPage() {
                     value={configForm.spamTimeWindowSec}
                     onChange={(e) => setConfigForm({ ...configForm, spamTimeWindowSec: parseInt(e.target.value) || 0 })}
                     disabled={!editingConfig}
-                    className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-[#CA8A04] focus:ring-1 focus:ring-[#CA8A04] disabled:bg-gray-50 disabled:text-gray-500 text-sm"
+                    className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-[#D3BA78] focus:ring-1 focus:ring-[#D3BA78] disabled:bg-gray-50 disabled:text-gray-500 text-sm"
                   />
                 </div>
 
@@ -169,7 +169,7 @@ export default function AdminQuotaPage() {
                     value={configForm.minMessageLength}
                     onChange={(e) => setConfigForm({ ...configForm, minMessageLength: parseInt(e.target.value) || 0 })}
                     disabled={!editingConfig}
-                    className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-[#CA8A04] focus:ring-1 focus:ring-[#CA8A04] disabled:bg-gray-50 disabled:text-gray-500 text-sm"
+                    className="w-full h-10 px-3 rounded-lg border border-gray-200 focus:border-[#D3BA78] focus:ring-1 focus:ring-[#D3BA78] disabled:bg-gray-50 disabled:text-gray-500 text-sm"
                   />
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function AdminQuotaPage() {
                     <button
                       onClick={() => updateConfigMutation.mutate(configForm)}
                       disabled={updateConfigMutation.isPending}
-                      className="px-4 py-2 text-sm font-medium text-white bg-[#6B0B0C] hover:bg-[#520809] rounded-full shadow-sm disabled:opacity-50 cursor-pointer"
+                      className="px-4 py-2 text-sm font-medium text-white bg-[#1C2544] hover:bg-[#13192F] rounded-full shadow-sm disabled:opacity-50 cursor-pointer"
                     >
                       {updateConfigMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
                     </button>
@@ -204,7 +204,7 @@ export default function AdminQuotaPage() {
                 ) : (
                   <button
                     onClick={() => setEditingConfig(true)}
-                    className="px-4 py-2 text-sm font-medium text-[#6B0B0C] bg-[#6B0B0C]/10 hover:bg-[#6B0B0C]/20 rounded-full transition-colors cursor-pointer flex items-center gap-2"
+                    className="px-4 py-2 text-sm font-medium text-[#1C2544] bg-[#1C2544]/10 hover:bg-[#1C2544]/20 rounded-full transition-colors cursor-pointer flex items-center gap-2"
                   >
                     <Edit2 className="h-4 w-4" />
                     Ubah Konfigurasi
@@ -294,7 +294,7 @@ export default function AdminQuotaPage() {
                               </span>
                               <button
                                 onClick={() => setEditingUser({ id: user.id, credits: user.credits, name: user.name || "User" })}
-                                className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-[#CA8A04] transition-opacity cursor-pointer"
+                                className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-[#D3BA78] transition-opacity cursor-pointer"
                               >
                                 <Edit2 className="h-3.5 w-3.5" />
                               </button>
@@ -321,7 +321,7 @@ export default function AdminQuotaPage() {
                                 }
                               }}
                               disabled={resetQuotaMutation.isPending}
-                              className="p-1.5 text-gray-400 hover:text-[#6B0B0C] hover:bg-red-50 rounded transition-colors cursor-pointer"
+                              className="p-1.5 text-gray-400 hover:text-[#1C2544] hover:bg-red-50 rounded transition-colors cursor-pointer"
                             >
                               <RotateCcw className="h-4 w-4" />
                             </button>

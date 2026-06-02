@@ -19,7 +19,7 @@ export function PublicHeader() {
   if (session) return null;
 
   return (
-    <header className="bg-primary text-primary-foreground border-primary-foreground/10 border-b px-4 md:px-6 py-4">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40 px-4 md:px-8 py-4 transition-all">
       <div className="flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
@@ -50,14 +50,14 @@ export function PublicHeader() {
         <nav className="hidden md:flex items-center gap-6">
           <Link
             href="/about"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+            className="text-sm font-medium text-foreground/80 hover:text-accent transition-colors"
           >
             Tentang Aplikasi
           </Link>
 
           <Link
             href="/contact"
-            className="text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+            className="text-sm font-medium text-foreground/80 hover:text-accent transition-colors"
           >
             Kontak
           </Link>
@@ -66,7 +66,7 @@ export function PublicHeader() {
           <div className="relative">
             <button
               type="button"
-              className="flex items-center gap-1 text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground transition-colors cursor-pointer"
+              className="flex items-center gap-1 text-sm font-medium text-foreground/80 hover:text-accent transition-colors cursor-pointer"
               onClick={() => setIsFiturOpen(!isFiturOpen)}
               onBlur={() => setTimeout(() => setIsFiturOpen(false), 200)}
             >
@@ -123,7 +123,7 @@ export function PublicHeader() {
         {/* Sign In Button */}
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 rounded-full bg-white text-primary px-5 py-2 text-sm font-semibold shadow-sm hover:bg-white/90 transition-colors"
+          className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-2 text-sm font-semibold shadow-md hover:bg-primary/90 transition-all hover:scale-105"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
@@ -139,29 +139,29 @@ export function PublicHeader() {
         <nav className="md:hidden mt-4 pt-4 border-t border-primary-foreground/10 space-y-1">
           <Link
             href="/about"
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-accent hover:bg-accent/10 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Tentang Aplikasi
           </Link>
           <Link
             href="/contact"
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-accent hover:bg-accent/10 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Kontak
           </Link>
-          <div className="px-3 py-1 text-xs font-medium text-primary-foreground/50 uppercase tracking-wider">Fitur</div>
+          <div className="px-3 py-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">Fitur</div>
           <Link
             href="/chat"
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-accent hover:bg-accent/10 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Konsultasi AI
           </Link>
           <Link
             href="/direktori"
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
+            className="block px-3 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-accent hover:bg-accent/10 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Direktori Peraturan

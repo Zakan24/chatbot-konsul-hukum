@@ -49,12 +49,12 @@ export default function AdminChatsPage() {
               key={msg.id}
               className={`rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.01)] transition-all duration-300 ${
                 msg.role === 'user'
-                  ? 'bg-[#6B0B0C] text-white border border-[#6B0B0C] ml-12 shadow-md'
+                  ? 'bg-[#1C2544] text-white border border-[#1C2544] ml-12 shadow-md'
                   : 'bg-white/80 backdrop-blur-md border border-white/60 mr-12 text-gray-800 leading-relaxed'
               }`}
             >
               <div className="flex items-center gap-2 mb-2 border-b border-white/10 pb-2 last:border-none last:pb-0">
-                <span className={`text-[10px] font-bold uppercase tracking-wider ${msg.role === 'user' ? 'text-gray-300' : 'text-[#6B0B0C]'}`}>
+                <span className={`text-[10px] font-bold uppercase tracking-wider ${msg.role === 'user' ? 'text-gray-300' : 'text-[#1C2544]'}`}>
                   {msg.role === 'user' ? 'Pengguna' : 'Asisten AI'}
                 </span>
                 <span className="text-[10px] text-gray-400">
@@ -115,7 +115,7 @@ export default function AdminChatsPage() {
                   onClick={() => setSelectedChatId(chat.id)}
                   className="hover:bg-gray-50/40 transition-colors duration-200 cursor-pointer"
                 >
-                  <td className="px-5 py-4 text-sm font-semibold text-gray-800 hover:text-[#6B0B0C] transition-colors">
+                  <td className="px-5 py-4 text-sm font-semibold text-gray-800 hover:text-[#1C2544] transition-colors">
                     <div className="flex items-center gap-2">
                       <MessageSquare className="w-4 h-4 text-gray-400 shrink-0" />
                       <span className="line-clamp-1">{chat.title}</span>
@@ -123,7 +123,7 @@ export default function AdminChatsPage() {
                   </td>
                   <td className="px-5 py-4 text-sm text-gray-500 font-medium">{chat.user.name ?? chat.user.email}</td>
                   <td className="px-5 py-4 text-sm text-center">
-                    <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-[#CA8A04]/10 text-[#CA8A04] border border-[#CA8A04]/20">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-[#D3BA78]/10 text-[#D3BA78] border border-[#D3BA78]/20">
                       {chat._count.messages} pesan
                     </span>
                   </td>

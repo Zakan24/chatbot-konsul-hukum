@@ -37,7 +37,7 @@ export default function AdminFeedbackPage() {
                 onClick={() => { setRatingFilter(val === 'all' ? undefined : val); setPage(1) }}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer shadow-sm ${
                   isActive
-                    ? 'bg-[#6B0B0C] text-white'
+                    ? 'bg-[#1C2544] text-white'
                     : 'border border-gray-200 bg-white hover:bg-gray-50 text-gray-700'
                 }`}
               >

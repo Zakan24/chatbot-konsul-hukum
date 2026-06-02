@@ -94,7 +94,7 @@ export default function DirektoriPage() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-white border border-gray-100 shadow-sm">
                   <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
                 </div>
-                <h1 className="text-lg font-bold hidden sm:block text-[#6B0B0C]">Konsul Hukum</h1>
+                <h1 className="text-lg font-bold hidden sm:block text-[#1C2544]">Konsul Hukum</h1>
               </Link>
             </div>
 
@@ -123,7 +123,7 @@ export default function DirektoriPage() {
                       src={session?.user?.image ?? ""}
                       alt={session?.user?.name ?? "User"}
                     />
-                    <AvatarFallback className="bg-[#6B0B0C]/10 text-[#6B0B0C] font-semibold">
+                    <AvatarFallback className="bg-[#1C2544]/10 text-[#1C2544] font-semibold">
                       {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
                     </AvatarFallback>
                   </Avatar>
@@ -169,7 +169,7 @@ export default function DirektoriPage() {
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
-                className="w-full h-14 pl-12 pr-4 rounded-full border border-white/60 bg-white/80 backdrop-blur-md text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#CA8A04]/20 focus:border-[#CA8A04]/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all"
+                className="w-full h-14 pl-12 pr-4 rounded-full border border-white/60 bg-white/80 backdrop-blur-md text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D3BA78]/20 focus:border-[#D3BA78]/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all"
               />
             </div>
             <button
@@ -185,7 +185,7 @@ export default function DirektoriPage() {
             <select
               value={filterKategori}
               onChange={(e) => { setFilterKategori(e.target.value); setPage(1); }}
-              className="h-10 rounded-full border border-white/60 bg-white/60 backdrop-blur-md px-4 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#CA8A04]/20 shadow-sm transition-all text-gray-700 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.75rem_center] bg-[length:1em_1em]"
+              className="h-10 rounded-full border border-white/60 bg-white/60 backdrop-blur-md px-4 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3BA78]/20 shadow-sm transition-all text-gray-700 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.75rem_center] bg-[length:1em_1em]"
             >
               <option value="">Semua Kategori</option>
               {filterOptions?.kategori.map((k) => (
@@ -196,7 +196,7 @@ export default function DirektoriPage() {
             <select
               value={filterTahun}
               onChange={(e) => { setFilterTahun(e.target.value); setPage(1); }}
-              className="h-10 rounded-full border border-white/60 bg-white/60 backdrop-blur-md px-4 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#CA8A04]/20 shadow-sm transition-all text-gray-700 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.75rem_center] bg-[length:1em_1em]"
+              className="h-10 rounded-full border border-white/60 bg-white/60 backdrop-blur-md px-4 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3BA78]/20 shadow-sm transition-all text-gray-700 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.75rem_center] bg-[length:1em_1em]"
             >
               <option value="">Semua Tahun</option>
               {filterOptions?.tahun.map((y) => (
@@ -231,10 +231,10 @@ export default function DirektoriPage() {
                 href={item.url_bpk || "#"}
                 target={item.url_bpk ? "_blank" : undefined}
                 rel={item.url_bpk ? "noopener noreferrer" : undefined}
-                className="group block rounded-2xl border border-white/60 bg-white/80 backdrop-blur-md p-5 md:p-6 shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 hover:border-[#CA8A04]/40 transition-all duration-300"
+                className="group block rounded-2xl border border-white/60 bg-white/80 backdrop-blur-md p-5 md:p-6 shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 hover:border-[#D3BA78]/40 transition-all duration-300"
               >
                 {/* Title */}
-                <h3 className="font-bold text-gray-900 mb-1 group-hover:text-[#6B0B0C] transition-colors text-base md:text-lg">
+                <h3 className="font-bold text-gray-900 mb-1 group-hover:text-[#1C2544] transition-colors text-base md:text-lg">
                   {item.judul}
                 </h3>
 
@@ -269,7 +269,7 @@ export default function DirektoriPage() {
 
                   {/* Kategori Hukum */}
                   {item.kategori_hukum && (
-                    <span className="flex items-center gap-1.5 bg-[#CA8A04]/10 text-[#CA8A04] px-3 py-1.5 rounded-full font-medium border border-[#CA8A04]/20">
+                    <span className="flex items-center gap-1.5 bg-[#D3BA78]/10 text-[#D3BA78] px-3 py-1.5 rounded-full font-medium border border-[#D3BA78]/20">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
@@ -291,7 +291,7 @@ export default function DirektoriPage() {
 
                   {/* External link */}
                   {item.url_bpk && (
-                    <span className="flex items-center gap-1.5 ml-auto group-hover:text-[#6B0B0C] transition-colors font-medium">
+                    <span className="flex items-center gap-1.5 ml-auto group-hover:text-[#1C2544] transition-colors font-medium">
                       Lihat di BPK
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M7 17 17 7" />
@@ -314,7 +314,7 @@ export default function DirektoriPage() {
               <p className="text-gray-500 font-medium mb-2">Tidak ada peraturan ditemukan.</p>
               <button
                 onClick={clearFilters}
-                className="text-sm text-[#CA8A04] hover:text-[#b57c03] hover:underline cursor-pointer"
+                className="text-sm text-[#D3BA78] hover:text-[#B89E5F] hover:underline cursor-pointer"
               >
                 Reset filter
               </button>
@@ -348,7 +348,7 @@ export default function DirektoriPage() {
                     onClick={() => setPage(pageNum)}
                     className={`h-9 min-w-9 rounded-xl px-3 py-2 text-sm font-medium transition-all cursor-pointer shadow-sm ${
                       pageNum === page
-                        ? "bg-[#6B0B0C] text-white border border-[#6B0B0C]"
+                        ? "bg-[#1C2544] text-white border border-[#1C2544]"
                         : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
                     }`}
                   >

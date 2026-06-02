@@ -37,7 +37,7 @@ export default function AdminLaporanPage() {
                 onClick={() => { setTypeFilter(val === 'all' ? undefined : val); setPage(1) }}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer shadow-sm ${
                   isActive
-                    ? 'bg-[#6B0B0C] text-white'
+                    ? 'bg-[#1C2544] text-white'
                     : 'border border-gray-200 bg-white hover:bg-gray-50 text-gray-700'
                 }`}
               >
@@ -75,7 +75,7 @@ export default function AdminLaporanPage() {
                     <td className="px-5 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
                         item.type === 'saran'
-                          ? 'bg-[#CA8A04]/10 text-[#CA8A04] border-[#CA8A04]/20'
+                          ? 'bg-[#D3BA78]/10 text-[#D3BA78] border-[#D3BA78]/20'
                           : 'bg-amber-50 text-amber-700 border-amber-100/30'
                       }`}>
                         {item.type === 'saran' ? (
