@@ -19,9 +19,9 @@ function getAI(): GoogleGenAI {
 }
 
 // ---------------------------------------------------------------------------
-// Model: Gemini 2.5 Pro — strongest reasoning for legal accuracy
+// Model: Gemini 3.5 Flash — updated per user request
 // ---------------------------------------------------------------------------
-const MODEL_ID = "gemini-2.5-pro";
+const MODEL_ID = "gemini-3.5-flash";
 
 function getDataStoreResource(): string {
   return `projects/${env.GCP_PROJECT_ID}/locations/global/collections/default_collection/dataStores/${env.VERTEX_AI_DATASTORE_ID}`;
