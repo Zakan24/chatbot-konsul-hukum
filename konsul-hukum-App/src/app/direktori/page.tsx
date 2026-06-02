@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { PublicHeader } from "@/components/public-header"
 
 export default function DirektoriPage() {
   const { data: session } = useSession()
@@ -83,68 +84,72 @@ export default function DirektoriPage() {
   return (
     <div className="flex h-screen flex-col bg-transparent">
       {/* Header */}
-      <header className="bg-white px-4 md:px-8 lg:px-24 py-4 shrink-0 border-b border-gray-100 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-white border border-gray-100 shadow-sm">
-                <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
-              </div>
-              <h1 className="text-lg font-bold hidden sm:block text-[#6B0B0C]">Konsul Hukum</h1>
-            </Link>
-          </div>
-
-          {/* Back Button */}
-          <div className="flex items-center">
-            <Link
-              href="/chat"
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-gray-900 bg-white/60 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m15 18-6-6 6-6"/>
-              </svg>
-              Kembali ke Chat
-            </Link>
-          </div>
-
-          {/* User avatar dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-10 w-10 rounded-full p-0 cursor-pointer hover:bg-white/40"
-              >
-                <Avatar className="h-10 w-10 border border-white/60 shadow-sm">
-                  <AvatarImage
-                    src={session?.user?.image ?? ""}
-                    alt={session?.user?.name ?? "User"}
-                  />
-                  <AvatarFallback className="bg-[#6B0B0C]/10 text-[#6B0B0C] font-semibold">
-                    {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-xl border-white/60 bg-white/90 backdrop-blur-xl">
-              <DropdownMenuLabel className="font-normal px-2 py-1.5">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-semibold text-gray-900 leading-none">
-                    {session?.user?.name}
-                  </p>
-                  <p className="text-gray-500 text-xs leading-none mt-1">
-                    {session?.user?.email}
-                  </p>
+      {!session ? (
+        <PublicHeader />
+      ) : (
+        <header className="bg-white px-4 md:px-8 lg:px-24 py-4 shrink-0 border-b border-gray-100 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Link href="/" className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-white border border-gray-100 shadow-sm">
+                  <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
                 </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-gray-100" />
-              <DropdownMenuItem className="cursor-pointer rounded-xl text-red-600 focus:bg-red-50 focus:text-red-700" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Keluar</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </header>
+                <h1 className="text-lg font-bold hidden sm:block text-[#6B0B0C]">Konsul Hukum</h1>
+              </Link>
+            </div>
+
+            {/* Back Button */}
+            <div className="flex items-center">
+              <Link
+                href="/chat"
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-gray-900 bg-white/60 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+                Kembali ke Chat
+              </Link>
+            </div>
+
+            {/* User avatar dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-10 w-10 rounded-full p-0 cursor-pointer hover:bg-white/40"
+                >
+                  <Avatar className="h-10 w-10 border border-white/60 shadow-sm">
+                    <AvatarImage
+                      src={session?.user?.image ?? ""}
+                      alt={session?.user?.name ?? "User"}
+                    />
+                    <AvatarFallback className="bg-[#6B0B0C]/10 text-[#6B0B0C] font-semibold">
+                      {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-xl border-white/60 bg-white/90 backdrop-blur-xl">
+                <DropdownMenuLabel className="font-normal px-2 py-1.5">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-semibold text-gray-900 leading-none">
+                      {session?.user?.name}
+                    </p>
+                    <p className="text-gray-500 text-xs leading-none mt-1">
+                      {session?.user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-gray-100" />
+                <DropdownMenuItem className="cursor-pointer rounded-xl text-red-600 focus:bg-red-50 focus:text-red-700" onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Keluar</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+      )}
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto bg-transparent custom-scrollbar">

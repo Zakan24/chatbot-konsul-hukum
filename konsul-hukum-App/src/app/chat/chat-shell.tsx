@@ -4,9 +4,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { LogOut, Menu, X, Send, Loader2, MessageSquare, ChevronDown, MoreVertical, Scale } from "lucide-react";
+import { LogOut, Menu, X, Send, Loader2, MessageSquare, ChevronDown, MoreVertical, Scale, ClipboardList, History, MessageCircle } from "lucide-react";
 
 import { ChatMessage } from "@/components/chat-message";
+import { PublicHeader } from "@/components/public-header";
+import { SignupPrompt } from "@/components/signup-prompt";
+import { CreditsExhaustedModal } from "@/components/credits-exhausted-modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -58,14 +61,25 @@ function ThinkingIndicator() {
 
 interface ChatShellProps {
   initialChatId: string | null;
+  isGuest?: boolean;
 }
 
-export function ChatShell({ initialChatId }: ChatShellProps) {
+export function ChatShell({ initialChatId, isGuest = false }: ChatShellProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { data: session } = useSession();
   const [message, setMessage] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Guest mode state — persist in localStorage so refresh doesn't reset
+  const [guestMessageSent, setGuestMessageSent] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("kh_guest_sent") === "1";
+    }
+    return false;
+  });
+  const [showSignupPrompt, setShowSignupPrompt] = useState(false);
+  const [showCreditsExhausted, setShowCreditsExhausted] = useState(false);
 
   // Track the current chat ID independently from the prop
   const [currentChatId, setCurrentChatId] = useState<string | null>(initialChatId);
@@ -96,6 +110,12 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
 
   const historyQuery = api.chat.history.useQuery(undefined, {
     refetchOnWindowFocus: false,
+    enabled: !isGuest,
+  });
+
+  // Credit info for logged-in users
+  const creditsQuery = api.chat.getCredits.useQuery(undefined, {
+    enabled: !isGuest,
   });
 
   const hasActiveChat = Boolean(currentChatId);
@@ -103,19 +123,19 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
   const messagesQuery = api.chat.messages.useQuery(
     { chatId: currentChatId ?? "" },
     {
-      enabled: hasActiveChat,
+      enabled: hasActiveChat && !isGuest,
       refetchOnReconnect: true,
     },
   );
 
   const createChatMutation = api.chat.create.useMutation();
-
   const sendMessageMutation = api.chat.sendMessage.useMutation();
+  const guestMessageMutation = api.chat.guestMessage.useMutation();
 
   const isComposerBusy =
-    createChatMutation.isPending || sendMessageMutation.isPending;
+    createChatMutation.isPending || sendMessageMutation.isPending || guestMessageMutation.isPending;
 
-  const isAIThinking = sendMessageMutation.isPending;
+  const isAIThinking = sendMessageMutation.isPending || guestMessageMutation.isPending;
 
   // Auto-scroll to bottom when messages change
   const scrollToBottom = useCallback(() => {
@@ -147,6 +167,18 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
   const handleSend = useCallback(async () => {
     if (!message.trim()) return;
 
+    // Guest: block if already sent 1 message
+    if (isGuest && guestMessageSent) {
+      setShowSignupPrompt(true);
+      return;
+    }
+
+    // Logged in: check credits
+    if (!isGuest && creditsQuery.data && creditsQuery.data.credits <= 0) {
+      setShowCreditsExhausted(true);
+      return;
+    }
+
     const text = message.trim();
     const tempId = `temp-${Date.now()}`;
 
@@ -165,6 +197,28 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
     setTimeout(() => scrollToBottom(), 100);
 
     try {
+      // ── GUEST MODE ──────────────────────────────────
+      if (isGuest) {
+        const result = await guestMessageMutation.mutateAsync({ message: text });
+
+        // Add AI response as optimistic message
+        setOptimisticMessages(prev => [...prev, {
+          id: `guest-ai-${Date.now()}`,
+          role: "assistant",
+          content: result.answer,
+          createdAt: new Date(),
+          sources: result.sources as SourceCitation[],
+          feedback: null
+        }]);
+
+        setGuestMessageSent(true);
+        localStorage.setItem("kh_guest_sent", "1");
+        // Show signup prompt after a short delay
+        setTimeout(() => setShowSignupPrompt(true), 1500);
+        return;
+      }
+
+      // ── AUTHENTICATED MODE ──────────────────────────
       let targetChatId = currentChatId;
 
       if (!targetChatId) {
@@ -196,19 +250,30 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
       await Promise.all([
         utils.chat.messages.invalidate({ chatId: targetChatId }),
         utils.chat.history.invalidate(),
+        utils.chat.getCredits.invalidate(),
       ]);
 
       // Don't clear optimistic messages here - let them be replaced by real messages
       // This keeps the user's message visible while AI is thinking
-    } catch (error) {
+    } catch (error: any) {
       console.error("[Chat] Failed to send message", error);
+      // Show credits exhausted or signup prompt if that's the error
+      if (error?.message?.includes?.("Kredit") || error?.data?.code === "FORBIDDEN") {
+        if (isGuest) {
+          setGuestMessageSent(true);
+          localStorage.setItem("kh_guest_sent", "1");
+          setShowSignupPrompt(true);
+        } else {
+          setShowCreditsExhausted(true);
+        }
+      }
       setMessage(text);
       // Remove optimistic message on error
       setOptimisticMessages(prev => prev.filter(m => m.id !== tempId));
       // Reset flag on error
       isCreatingNewChat.current = false;
     }
-  }, [message, currentChatId, createChatMutation, sendMessageMutation, utils, scrollToBottom]);
+  }, [message, currentChatId, isGuest, guestMessageSent, creditsQuery.data, createChatMutation, sendMessageMutation, guestMessageMutation, utils, scrollToBottom]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -415,57 +480,97 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
         ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}
         md:hidden
       `}>
-        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-sm bg-white border border-gray-100">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
+        {isGuest ? (
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+            <Button variant="ghost" size="icon" className="absolute top-4 right-4" onClick={handleCloseSidebar}>
+              <X className="h-5 w-5" />
+            </Button>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#6B0B0C]/10 text-[#6B0B0C] mb-4">
+              <LogOut className="h-6 w-6 rotate-180" />
             </div>
-            <span className="font-semibold text-gray-800">Konsul Hukum</span>
+            <h3 className="text-sm font-bold text-gray-900 mb-2">Masuk untuk fitur lengkap</h3>
+            <ul className="text-xs text-gray-600 space-y-3 mb-6 text-left w-full">
+              <li className="flex items-center gap-2.5">
+                <ClipboardList className="h-3.5 w-3.5 shrink-0 text-[#6B0B0C]" />
+                <span>Simpan riwayat percakapan</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <History className="h-3.5 w-3.5 shrink-0 text-[#6B0B0C]" />
+                <span>Akses riwayat chat kapan saja</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <MessageCircle className="h-3.5 w-3.5 shrink-0 text-[#6B0B0C]" />
+                <span>Beri feedback pada jawaban AI</span>
+              </li>
+            </ul>
+            <Link
+              href="/login"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#6B0B0C] px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#520809]"
+            >
+              Masuk Sekarang
+            </Link>
           </div>
-          <Button variant="ghost" size="icon" onClick={handleCloseSidebar}>
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-        <div className="p-4 border-b border-gray-100">
-          <button
-            onClick={() => {
-              handleCreateChat();
-              handleCloseSidebar();
-            }}
-            className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-[#CA8A04]">
-              <path d="M5 12h14"/><path d="M12 5v14"/>
-            </svg>
-            Chat Baru
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="space-y-1">{sidebarContent}</div>
-        </div>
-        <div className="p-4 border-t border-gray-100">
-           <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50" onClick={handleLogout}>
-             <LogOut className="mr-2 h-4 w-4" />
-             Logout
-           </Button>
-        </div>
+        ) : (
+          <>
+            <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-sm bg-white border border-gray-100">
+                  <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
+                </div>
+                <span className="font-semibold text-gray-800">Konsul Hukum</span>
+              </div>
+              <Button variant="ghost" size="icon" onClick={handleCloseSidebar}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <div className="p-4 border-b border-gray-100">
+              <button
+                onClick={() => {
+                  handleCreateChat();
+                  handleCloseSidebar();
+                }}
+                className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-[#CA8A04]">
+                  <path d="M5 12h14"/><path d="M12 5v14"/>
+                </svg>
+                Chat Baru
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="space-y-1">{sidebarContent}</div>
+            </div>
+            <div className="p-4 border-t border-gray-100">
+               <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50" onClick={handleLogout}>
+                 <LogOut className="mr-2 h-4 w-4" />
+                 Logout
+               </Button>
+            </div>
+          </>
+        )}
       </aside>
 
       <div className="bg-white border border-gray-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] rounded-3xl md:rounded-[2.5rem] w-full max-w-[1400px] h-full md:h-[95vh] flex flex-col md:flex-row overflow-hidden relative">
 
-        {/* Mobile Header */}
-        <header className="md:hidden h-16 flex items-center justify-between px-4 border-b border-gray-100/50 shrink-0 bg-white/50">
-          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
-            <Menu className="h-6 w-6" />
-          </Button>
-          <h1 className="text-[#6B0B0C] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={session?.user?.image ?? ""} />
-            <AvatarFallback>{session?.user?.name?.charAt(0) ?? "U"}</AvatarFallback>
-          </Avatar>
-        </header>
+        {isGuest ? (
+          <div className="absolute top-0 left-0 right-0 z-20">
+            <PublicHeader />
+          </div>
+        ) : (
+          <header className="md:hidden h-16 flex items-center justify-between px-4 border-b border-gray-100/50 shrink-0 bg-white/50">
+            <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
+              <Menu className="h-6 w-6" />
+            </Button>
+            <h1 className="text-[#6B0B0C] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={session?.user?.image ?? ""} />
+              <AvatarFallback>{session?.user?.name?.charAt(0) ?? "U"}</AvatarFallback>
+            </Avatar>
+          </header>
+        )}
 
         {/* Desktop Nav Kiri */}
+        {!isGuest && (
         <nav className="w-20 hidden md:flex flex-col items-center py-8 gap-6 border-r border-gray-100 bg-gray-50/50 shrink-0">
           <div className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center shadow-lg mb-4 bg-white border border-gray-100">
             <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
@@ -493,9 +598,10 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
             </DropdownMenu>
           </div>
         </nav>
+        )}
 
         {/* Main Tengah */}
-        <main className="flex-1 flex flex-col relative h-full w-full overflow-hidden bg-white">
+        <main className={`flex-1 flex flex-col relative h-full w-full overflow-hidden bg-white ${isGuest ? 'pt-16 md:pt-0' : ''}`}>
           {/* Desktop Header */}
           <header className="hidden md:flex h-20 items-center justify-center shrink-0">
             <h1 className="text-[#6B0B0C] font-semibold text-sm tracking-wide">Konsultasi Hukum AI</h1>
@@ -540,6 +646,11 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
               </div>
             )}
 
+            {/* Guest signup banner (inline, after first message response) */}
+            {isGuest && guestMessageSent && !isAIThinking && (
+              <SignupPrompt variant="banner" />
+            )}
+
             <div ref={messagesEndRef} className="h-4 shrink-0" />
           </div>
 
@@ -558,12 +669,12 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
                       void handleSend();
                     }
                   }}
-                  disabled={isComposerBusy}
+                  disabled={isComposerBusy || (isGuest && guestMessageSent)}
                   rows={1}
                 />
                 <button
                   type="submit"
-                  disabled={isComposerBusy || !message.trim()}
+                  disabled={isComposerBusy || !message.trim() || (isGuest && guestMessageSent)}
                   className="w-10 h-10 shrink-0 rounded-full bg-[#6B0B0C] text-white flex items-center justify-center hover:bg-[#520809] transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed ml-2 cursor-pointer"
                 >
                   {isComposerBusy ? (
@@ -605,11 +716,44 @@ export function ChatShell({ initialChatId }: ChatShellProps) {
           </button>
 
           <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-            {sidebarContent}
+            {isGuest ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center mt-12 p-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#6B0B0C]/10 text-[#6B0B0C] mb-4">
+                  <LogOut className="h-6 w-6 rotate-180" />
+                </div>
+                <h3 className="text-sm font-bold text-gray-900 mb-2">Masuk untuk fitur lengkap</h3>
+                <ul className="text-xs text-gray-600 space-y-3 mb-6 text-left w-full">
+                  <li className="flex items-center gap-2.5">
+                    <ClipboardList className="h-3.5 w-3.5 shrink-0 text-[#6B0B0C]" />
+                    <span>Simpan riwayat percakapan</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <History className="h-3.5 w-3.5 shrink-0 text-[#6B0B0C]" />
+                    <span>Akses riwayat chat kapan saja</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <MessageCircle className="h-3.5 w-3.5 shrink-0 text-[#6B0B0C]" />
+                    <span>Beri feedback pada jawaban AI</span>
+                  </li>
+                </ul>
+                <Link
+                  href="/login"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-[#6B0B0C] px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#520809]"
+                >
+                  Masuk Sekarang
+                </Link>
+              </div>
+            ) : sidebarContent}
           </div>
         </aside>
 
       </div>
+      {showSignupPrompt && (
+        <SignupPrompt variant="modal" onDismiss={() => setShowSignupPrompt(false)} />
+      )}
+      {showCreditsExhausted && (
+        <CreditsExhaustedModal onClose={() => setShowCreditsExhausted(false)} />
+      )}
       {/* Rename Chat Modal */}
       {
         renamingChatId && (

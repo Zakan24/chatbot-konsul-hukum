@@ -24,6 +24,12 @@ model User {
   chats         Chat[]
   feedbacks     Feedback[]
   reports       Report[]
+  // --- Sistem Kuota/Kredit ---
+  credits           Int       @default(20)     // Sisa kredit pesan
+  creditCostPerMsg  Int       @default(1)      // Biaya per pesan (bisa naik jika spam)
+  isFlagged         Boolean   @default(false)  // Flag admin untuk user yang menyalahgunakan
+  lastMessageAt     DateTime?                  // Untuk deteksi spam (waktu pesan terakhir)
+  spamStreak        Int       @default(0)      // Hitungan berturut-turut pesan spam
 }
 
 model Account {
@@ -134,4 +140,25 @@ model Peraturan {
 
   @@index([kategori_hukum])
   @@index([tahun])
+}
+
+// 3. Konfigurasi Kuota (Singleton — hanya 1 baris)
+// ==================================================
+model QuotaConfig {
+  id                    Int    @id @default(1)  // Selalu ID 1 (singleton)
+  defaultCredits        Int    @default(20)     // Kredit default untuk user baru
+  guestMessageLimit     Int    @default(1)      // Batas pesan untuk guest
+  spamTimeWindowSec     Int    @default(30)     // Pesan dalam waktu ini = spam
+  minMessageLength      Int    @default(10)     // Pesan lebih pendek dari ini = spam
+}
+
+// 4. Model Tracking Usage Guest (mencegah bypass incognito)
+// ==================================================
+model GuestUsage {
+  id         String   @id @default(uuid())
+  ip         String
+  actionType String   // "chat"
+  createdAt  DateTime @default(now())
+
+  @@index([ip, actionType])
 }

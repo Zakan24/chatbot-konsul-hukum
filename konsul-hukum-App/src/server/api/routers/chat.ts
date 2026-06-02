@@ -2,11 +2,77 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { answerLegalQuestion, type SourceCitation } from 'nvn/server/ai/chat-agent';
-import { createTRPCRouter, protectedProcedure } from 'nvn/server/api/trpc';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from 'nvn/server/api/trpc';
 
 const chatIdInput = z.object({
   chatId: z.string().uuid(),
 });
+
+// Helper: load singleton config with defaults
+async function getQuotaConfig(db: any) {
+  let config = await db.quotaConfig.findFirst({ where: { id: 1 } });
+  if (!config) {
+    config = {
+      defaultCredits: 20,
+      guestMessageLimit: 1,
+      spamTimeWindowSec: 30,
+      minMessageLength: 10,
+    };
+  }
+  return config;
+}
+
+// Helper: check spam patterns and return dynamic cost
+async function computeCreditCost(
+  db: any,
+  userId: string,
+  message: string,
+  baseCost: number,
+  spamTimeWindowSec: number,
+  minMessageLength: number
+): Promise<{ cost: number; spamStreak: number; isSpam: boolean }> {
+  const user = await db.user.findUnique({ where: { id: userId } });
+  if (!user) return { cost: baseCost, spamStreak: 0, isSpam: false };
+
+  // If admin flagged this user, cost is fixed to 3x and we ignore streaks
+  if (user.isFlagged) {
+    return { cost: 3, spamStreak: user.spamStreak, isSpam: true };
+  }
+
+  let isSpam = false;
+  let spamStreak = user.spamStreak;
+
+  // 1. Check if message is too short
+  if (message.length < minMessageLength) {
+    isSpam = true;
+  }
+
+  // 2. Check if sent too quickly (spamming enter)
+  if (user.lastMessageAt) {
+    const secondsSinceLastMsg = (Date.now() - user.lastMessageAt.getTime()) / 1000;
+    if (secondsSinceLastMsg < spamTimeWindowSec) {
+      isSpam = true;
+    }
+  }
+
+  if (isSpam) {
+    spamStreak += 1;
+  } else {
+    // Reset streak if legitimate message
+    spamStreak = 0;
+  }
+
+  // Cost escalates with spam streak
+  let cost = baseCost;
+  if (spamStreak >= 3) {
+    cost = 2; // 2x cost
+  }
+  if (spamStreak >= 6) {
+    cost = 3; // 3x cost max
+  }
+
+  return { cost, spamStreak, isSpam };
+}
 
 export const chatRouter = createTRPCRouter({
   history: protectedProcedure.query(async ({ ctx }) => {
@@ -58,6 +124,51 @@ export const chatRouter = createTRPCRouter({
     return chat;
   }),
 
+  getCredits: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: { id: ctx.session.user.id },
+      select: { credits: true, isFlagged: true, creditCostPerMsg: true },
+    });
+    if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
+    return user;
+  }),
+
+  guestMessage: publicProcedure
+    .input(z.object({ message: z.string().min(1).max(2000) }))
+    .mutation(async ({ ctx, input }) => {
+      const ip = ctx.ip || 'unknown';
+
+      // 1. Load config
+      const config = await getQuotaConfig(ctx.db);
+
+      // 2. Check how many messages this IP has sent
+      const usageCount = await ctx.db.guestUsage.count({
+        where: { ip, actionType: 'chat' },
+      });
+
+      if (usageCount >= config.guestMessageLimit) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Batas pesan gratis habis. Silakan login untuk melanjutkan.',
+        });
+      }
+
+      // 3. Process AI query without saving to database (guest has no history)
+      const trimmedMessage = input.message.trim();
+      const { answer, sources } = await answerLegalQuestion(trimmedMessage, []);
+
+      // 4. Record usage
+      await ctx.db.guestUsage.create({
+        data: { ip, actionType: 'chat' },
+      });
+
+      return {
+        answer,
+        sources,
+        creditsRemaining: config.guestMessageLimit - usageCount - 1,
+      };
+    }),
+
   sendMessage: protectedProcedure
     .input(
       z.object({
@@ -75,6 +186,27 @@ export const chatRouter = createTRPCRouter({
       }
 
       const trimmedMessage = input.message.trim();
+
+      // 1. Credit & Spam Check
+      const user = await ctx.db.user.findUnique({ where: { id: ctx.session.user.id } });
+      if (!user) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      const config = await getQuotaConfig(ctx.db);
+      const { cost, spamStreak } = await computeCreditCost(
+        ctx.db,
+        user.id,
+        trimmedMessage,
+        user.creditCostPerMsg,
+        config.spamTimeWindowSec,
+        config.minMessageLength
+      );
+
+      if (user.credits < cost) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: `Kredit tidak cukup. Dibutuhkan: ${cost}, Tersedia: ${user.credits}`,
+        });
+      }
 
       // NEW: Fetch recent message history for conversational context (last 10 messages)
       const recentMessages = await ctx.db.message.findMany({
@@ -119,6 +251,16 @@ export const chatRouter = createTRPCRouter({
         },
       });
 
+      // Deduct credits and update spam streak
+      await ctx.db.user.update({
+        where: { id: user.id },
+        data: {
+          credits: { decrement: cost },
+          spamStreak,
+          lastMessageAt: new Date(),
+        },
+      });
+
       return {
         userMessage: {
           id: userMessage.id,
@@ -133,6 +275,8 @@ export const chatRouter = createTRPCRouter({
           createdAt: assistantMessage.createdAt,
           sources,
         },
+        creditsRemaining: user.credits - cost,
+        creditCost: cost,
       };
     }),
 

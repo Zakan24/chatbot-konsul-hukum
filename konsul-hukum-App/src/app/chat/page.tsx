@@ -6,10 +6,8 @@ import { auth } from "nvn/server/auth";
 export default async function ChatIndexPage() {
   const session = await auth();
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+  const isGuest = !session?.user;
 
-  return <ChatShell initialChatId={null} />;
+  return <ChatShell initialChatId={null} isGuest={isGuest} />;
 }
 

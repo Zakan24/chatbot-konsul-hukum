@@ -10,8 +10,15 @@ import { createTRPCContext } from "nvn/server/api/trpc";
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
+  // Try to get IP from standard headers or the raw connection
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ||
+             req.headers.get("x-real-ip") ||
+             req.ip ||
+             "127.0.0.1";
+
   return createTRPCContext({
     headers: req.headers,
+    ip,
   });
 };
 
