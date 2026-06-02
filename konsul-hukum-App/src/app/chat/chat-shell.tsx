@@ -590,6 +590,29 @@ export function ChatShell({ initialChatId, isGuest = false }: ChatShellProps) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/about" className="w-full flex items-center">
+                    Tentang Aplikasi
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/contact" className="w-full flex items-center">
+                    Kontak
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-xs text-muted-foreground">Fitur</DropdownMenuLabel>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/chat" className="w-full flex items-center">
+                    Konsultasi AI
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/direktori" className="w-full flex items-center">
+                    Direktori Peraturan
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Logout</span>
@@ -692,7 +715,7 @@ export function ChatShell({ initialChatId, isGuest = false }: ChatShellProps) {
         </main>
 
         {/* Desktop Aside (Kanan) */}
-        <aside className="w-80 hidden md:flex bg-gray-50/50 border-l border-gray-100 p-6 flex-col shrink-0">
+        <aside className={`w-80 hidden md:flex bg-gray-50/50 border-l border-gray-100 p-6 flex-col shrink-0 ${isGuest ? 'pt-24' : ''}`}>
           <button
             onClick={handleCreateChat}
             className="w-full bg-white border border-gray-200 text-gray-700 rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-sm hover:bg-gray-50 transition mb-4 cursor-pointer"
