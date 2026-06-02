@@ -5,7 +5,7 @@ import { useState } from "react";
 import { PublicHeader } from "@/components/public-header";
 import { BrandText } from "@/components/brand-text";
 import { useSession } from "next-auth/react";
-import { MessageCircle, Scale, BookOpen, ArrowLeft } from "lucide-react";
+import { MessageCircle, Scale, BookOpen, ArrowLeft, ChevronDown } from "lucide-react";
 
 export default function AboutPage() {
   const { data: session } = useSession();
@@ -14,39 +14,39 @@ export default function AboutPage() {
   const faqs = [
     {
       q: "Apa itu Konsul Hukum AI?",
-      a: "Konsul Hukum AI adalah aplikasi chatbot AI yang dirancang untuk membantu Anda memahami peraturan dan undang-undang di Indonesia. Aplikasi ini menggunakan teknologi AI yang di-grounding dengan database peraturan hukum resmi.",
+      a: "Konsul Hukum AI adalah aplikasi chatbot AI eksklusif yang dirancang untuk memberikan pemahaman mendalam tentang regulasi dan perundang-undangan di Indonesia, didukung oleh kecerdasan buatan dengan referensi presisi ke sumber hukum resmi.",
     },
     {
       q: "Apakah jawaban dari Konsul Hukum AI bisa dijadikan dasar hukum di pengadilan?",
-      a: "Tidak. Konsul Hukum AI hanyalah alat bantu untuk memahami peraturan hukum. Jawaban yang diberikan bersifat informatif dan edukatif, bukan nasihat hukum mengikat dari pengacara resmi. Selalu konsultasikan dengan penasihat hukum profesional untuk keputusan yang berkaitan dengan ranah hukum pengadilan.",
+      a: "Konsul Hukum AI berfungsi sebagai asisten analitis dan edukatif. Layanan ini bukan pengganti opini legal dari advokat bersertifikat. Selalu konsultasikan dengan penasihat hukum profesional untuk pengambilan keputusan strategis atau litigasi.",
     },
     {
       q: "Bagaimana cara menggunakan Konsul Hukum AI?",
-      a: "Anda cukup mengetikkan pertanyaan seputar hukum di kolom chat, dan AI kami akan memberikan jawaban yang dilengkapi dengan referensi pasal dan peraturan yang relevan. Anda bisa mencoba 1 pertanyaan gratis tanpa login, atau daftar untuk mendapatkan kredit pesan awal.",
+      a: "Sampaikan pertanyaan spesifik Anda di antarmuka chat kami, dan AI akan menganalisis serta menyajikan jawaban komprehensif lengkap dengan sitasi pasal relevan. Tersedia akses uji coba bagi tamu, dan fitur penuh untuk pengguna terdaftar.",
     },
     {
       q: "Berapa biaya menggunakan Konsul Hukum AI?",
-      a: "Saat ini Konsul Hukum AI dapat digunakan secara gratis. Setiap pengguna yang mendaftar mendapatkan kredit pesan. Setiap pertanyaan yang wajar mengkonsumsi 1 kredit.",
+      a: "Saat ini, akses ke Konsul Hukum AI disediakan secara gratis dengan sistem alokasi kredit untuk menjaga kualitas performa. Setiap analisis pertanyaan akan mengonsumsi satu kredit.",
     },
     {
       q: "Apakah data percakapan saya aman?",
-      a: "Ya. Percakapan Anda disimpan secara aman dan hanya dapat diakses oleh akun Anda sendiri. Kami tidak membagikan data percakapan Anda kepada pihak ketiga tanpa izin.",
+      a: "Privasi Anda adalah prioritas absolut kami. Enkripsi tingkat lanjut memastikan bahwa riwayat percakapan sepenuhnya rahasia dan hanya dapat diakses melalui kredensial pribadi Anda.",
     },
   ];
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col font-sans selection:bg-accent/30 selection:text-primary">
       {/* Header */}
       {!session ? (
         <PublicHeader />
       ) : (
-        <header className="bg-primary text-primary-foreground border-primary-foreground/10 border-b px-4 md:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <img src="/logo-header.png" alt="KH" className="h-8 w-8 object-contain" />
-              <BrandText className="text-lg" />
+        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40 px-4 md:px-8 py-4 transition-all">
+          <div className="flex items-center justify-between max-w-6xl mx-auto">
+            <Link href="/" className="flex items-center gap-3 group">
+              <img src="/logo-header.png" alt="KH" className="h-9 w-9 object-contain group-hover:scale-105 transition-transform" />
+              <BrandText className="text-xl tracking-tight" />
             </Link>
-            <Link href="/chat" className="flex items-center gap-1.5 text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors font-medium">
+            <Link href="/chat" className="flex items-center gap-2 text-sm text-foreground/70 hover:text-accent transition-colors font-medium">
               <ArrowLeft className="h-4 w-4" />
               <span>Kembali ke Chat</span>
             </Link>
@@ -54,95 +54,133 @@ export default function AboutPage() {
         </header>
       )}
 
-      <main className="flex-1 bg-background">
-        {/* Hero */}
-        <section className="bg-primary text-primary-foreground py-16 md:py-24">
-          <div className="mx-auto max-w-4xl px-4 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">Tentang Konsul Hukum AI</h1>
-            <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto">
-              Asisten AI komprehensif yang menyediakan fitur chatbot dan konsultan hukum. Didukung oleh teknologi AI modern dengan grounding pada peraturan dan undang-undang resmi di Indonesia.
+      <main className="flex-1 bg-background overflow-hidden">
+        {/* Premium Hero Section */}
+        <section className="relative bg-primary text-primary-foreground py-24 md:py-32 lg:py-40 flex items-center justify-center overflow-hidden">
+          {/* Abstract Background Elements */}
+          <div className="absolute inset-0 z-0">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-pulse"></div>
+            <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-accent/10 rounded-full blur-[150px] mix-blend-screen opacity-40"></div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-overlay"></div>
+          </div>
+          
+          <div className="relative z-10 mx-auto max-w-4xl px-6 text-center space-y-8">
+            <div className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent backdrop-blur-sm mb-4">
+              <span className="flex h-2 w-2 rounded-full bg-accent mr-2 animate-ping"></span>
+              Kecerdasan Buatan Hukum
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight leading-tight text-white">
+              Navigasi Hukum <br className="hidden md:block" /> 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-200">Tanpa Batas</span>
+            </h1>
+            <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto font-light leading-relaxed">
+              Asisten AI komprehensif dengan presisi analitik. Didukung oleh teknologi mutakhir yang di-grounding langsung pada perundang-undangan resmi Indonesia.
             </p>
           </div>
+          
+          {/* Decorative Bottom Wave/Border */}
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent"></div>
         </section>
 
-        <div className="mx-auto max-w-4xl px-4 py-12 space-y-16">
-          {/* Latar Belakang */}
-          <section>
-            <h2 className="text-2xl font-bold text-foreground mb-4">Latar Belakang</h2>
-            <div className="prose-chat text-muted-foreground space-y-4">
-              <p>
-                Konsul Hukum AI dikembangkan untuk mengatasi tantangan aksesibilitas informasi hukum di Indonesia. Banyak masyarakat yang kesulitan memahami bahasa undang-undang yang kompleks dan sulit diakses.
-              </p>
-              <p>
-                Dengan memanfaatkan teknologi AI Retrieval-Augmented Generation (RAG), Konsul Hukum AI dapat memberikan jawaban yang akurat dan dilengkapi dengan referensi langsung ke pasal dan peraturan yang relevan. Ini menjembatani kesenjangan antara masyarakat umum dan pemahaman dasar tentang hukum.
-              </p>
+        <div className="mx-auto max-w-5xl px-6 py-20 space-y-32">
+          
+          {/* Latar Belakang - Elegant Prose */}
+          <section className="grid md:grid-cols-12 gap-12 items-center">
+            <div className="md:col-span-5 relative">
+              <div className="aspect-square rounded-2xl bg-gradient-to-tr from-primary to-primary/80 p-1 flex items-center justify-center relative overflow-hidden shadow-2xl shadow-primary/20">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                <Scale className="w-32 h-32 text-accent opacity-90 drop-shadow-lg" strokeWidth={1} />
+                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-accent/30 blur-[50px] rounded-full"></div>
+              </div>
+            </div>
+            <div className="md:col-span-7 space-y-6">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
+                <span className="w-8 h-1 bg-accent rounded-full"></span>
+                Latar Belakang
+              </h2>
+              <div className="text-lg text-muted-foreground leading-relaxed space-y-6 font-light">
+                <p>
+                  Konsul Hukum AI dikonseptualisasikan untuk merespons kompleksitas literasi hukum di Indonesia. Kami menyadari bahwa arsitektur bahasa perundang-undangan sering kali menjadi penghalang bagi masyarakat umum untuk memahami hak dan kewajiban mereka.
+                </p>
+                <p>
+                  Melalui implementasi teknologi <strong className="text-foreground font-medium">Retrieval-Augmented Generation (RAG)</strong> tingkat lanjut, aplikasi ini menyaring dan memformulasikan jawaban akurat dengan rujukan definitif. Kami menjembatani kesenjangan informasi dengan keanggunan teknologi.
+                </p>
+              </div>
             </div>
           </section>
 
-          {/* Fitur */}
-          <section>
-            <h2 className="text-2xl font-bold text-foreground mb-6">Fitur Utama</h2>
-            <div className="grid md:grid-cols-3 gap-4">
+          {/* Fitur - Premium Cards */}
+          <section className="space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground">Keunggulan Sistem</h2>
+              <p className="text-muted-foreground font-light max-w-xl mx-auto">Arsitektur fitur yang dirancang khusus untuk memberikan pengalaman konsultasi yang mulus dan dapat diandalkan.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
               {[
-                { icon: <MessageCircle className="h-6 w-6" />, title: "Konsultasi AI", desc: "Tanyakan pertanyaan seputar hukum dan dapatkan jawaban yang komprehensif." },
-                { icon: <Scale className="h-6 w-6" />, title: "Referensi Hukum", desc: "Setiap jawaban dilengkapi dengan referensi pasal dari peraturan resmi." },
-                { icon: <BookOpen className="h-6 w-6" />, title: "Direktori Peraturan", desc: "Jelajahi peraturan perundang-undangan di Indonesia dalam satu tempat." },
+                { icon: <MessageCircle className="h-8 w-8" />, title: "Konsultasi AI Dinamis", desc: "Dialog interaktif cerdas yang merespons secara kontekstual terhadap setiap nuansa pertanyaan hukum Anda." },
+                { icon: <Scale className="h-8 w-8" />, title: "Sitasi Hukum Presisi", desc: "Setiap analisis yang diberikan dilengkapi dengan rujukan pasal aktual dari pangkalan data resmi." },
+                { icon: <BookOpen className="h-8 w-8" />, title: "Direktori Terintegrasi", desc: "Akses sentralistik ke arsip perundang-undangan nasional dengan antarmuka pencarian yang intuitif." },
               ].map((f, i) => (
-                <div key={i} className="rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow group">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/5 text-muted-foreground group-hover:text-primary group-hover:bg-primary/10 transition-colors mb-4">
+                <div key={i} className="group relative rounded-2xl bg-card border border-border/50 p-8 shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-bl-full -z-10 group-hover:bg-accent/10 transition-colors"></div>
+                  <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-accent shadow-inner">
                     {f.icon}
                   </div>
-                  <h3 className="font-bold text-foreground mb-1">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground">{f.desc}</p>
+                  <h3 className="text-xl font-semibold text-foreground mb-3">{f.title}</h3>
+                  <p className="text-muted-foreground font-light leading-relaxed">{f.desc}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* Teknologi */}
-          <section>
-            <h2 className="text-2xl font-bold text-foreground mb-4">Teknologi</h2>
-            <div className="flex flex-wrap gap-2">
-              {["Next.js", "tRPC", "Prisma", "PostgreSQL", "Google Vertex AI", "TailwindCSS"].map((tech) => (
-                <span key={tech} className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-                  {tech}
-                </span>
-              ))}
+          {/* Teknologi - Sleek Pills */}
+          <section className="bg-primary/5 rounded-3xl p-10 md:p-16 border border-primary/10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-5">
+              <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-foreground">Infrastruktur Teknologi</h2>
+                <p className="text-muted-foreground font-light">Dibangun di atas tumpukan teknologi modern yang tangguh.</p>
+              </div>
+              <div className="flex flex-wrap gap-3 max-w-lg justify-start md:justify-end">
+                {["Next.js", "tRPC", "Prisma", "PostgreSQL", "Google Vertex AI", "TailwindCSS"].map((tech) => (
+                  <span key={tech} className="rounded-full bg-background border border-border/50 px-5 py-2 text-sm font-medium text-foreground shadow-sm hover:border-accent/50 hover:text-accent transition-colors cursor-default">
+                    {tech}
+                  </span>
+                ))}
+              </div>
             </div>
           </section>
 
-          {/* FAQ */}
-          <section>
-            <h2 className="text-2xl font-bold text-foreground mb-6">Pertanyaan yang Sering Ditanyakan</h2>
-            <div className="space-y-2">
+          {/* FAQ - Minimalist Accordion */}
+          <section className="max-w-3xl mx-auto space-y-10">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground">Pertanyaan Umum</h2>
+              <p className="text-muted-foreground font-light">Informasi komprehensif seputar layanan kami.</p>
+            </div>
+            
+            <div className="space-y-4">
               {faqs.map((faq, i) => (
-                <div key={i} className="rounded-xl border border-border bg-card overflow-hidden">
+                <div key={i} className="group border border-border/60 rounded-2xl bg-card hover:border-accent/30 transition-colors overflow-hidden">
                   <button
                     type="button"
-                    className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer hover:bg-muted/50 transition-colors"
+                    className="w-full flex items-center justify-between px-6 py-5 text-left cursor-pointer outline-none"
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   >
-                    <span className="font-medium text-sm text-foreground">{faq.q}</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={`shrink-0 ml-2 text-muted-foreground transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`}
-                    >
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
+                    <span className="font-semibold text-foreground pr-8">{faq.q}</span>
+                    <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center bg-primary/5 text-primary transition-transform duration-300 ${openFaq === i ? "rotate-180 bg-accent/20 text-accent" : ""}`}>
+                      <ChevronDown className="h-4 w-4" strokeWidth={2.5} />
+                    </div>
                   </button>
-                  {openFaq === i && (
-                    <div className="px-5 pb-4 text-sm text-muted-foreground border-t border-border pt-3">
+                  <div 
+                    className={`px-6 text-muted-foreground font-light leading-relaxed overflow-hidden transition-all duration-300 ease-in-out ${openFaq === i ? "max-h-96 pb-5 opacity-100" : "max-h-0 opacity-0"}`}
+                  >
+                    <div className="pt-2 border-t border-border/30 mt-2">
                       {faq.a}
                     </div>
-                  )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -150,10 +188,14 @@ export default function AboutPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-muted border-t border-border py-6">
-        <div className="mx-auto max-w-4xl px-4 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Konsul Hukum AI.
+      {/* Elegant Footer */}
+      <footer className="bg-primary text-primary-foreground/60 py-8 border-t border-accent/20">
+        <div className="mx-auto max-w-6xl px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-light">
+          <div className="flex items-center gap-2">
+            <img src="/logo-header.png" alt="KH" className="h-6 w-6 object-contain opacity-50 grayscale" />
+            <span>© {new Date().getFullYear()} Konsul Hukum AI.</span>
+          </div>
+          <div>Hak Cipta Dilindungi Undang-Undang.</div>
         </div>
       </footer>
     </div>

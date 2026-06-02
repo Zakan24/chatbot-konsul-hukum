@@ -11,33 +11,33 @@
   --card-foreground: oklch(0.25 0.02 260);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.25 0.02 260);
-  --primary: #6B0B0C;
+  --primary: #1C2544;
   --primary-foreground: #FFFFFF;
   --secondary: oklch(0.95 0.01 85);
-  --secondary-foreground: oklch(0.25 0.02 260);
+  --secondary-foreground: #1C2544;
   --muted: oklch(0.96 0.005 260);
   --muted-foreground: oklch(0.5 0.02 260);
-  --accent: #CA8A04;
-  --accent-foreground: #FFFFFF;
+  --accent: #D3BA78;
+  --accent-foreground: #1C2544;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.92 0.005 260);
   --input: oklch(0.95 0.005 260);
-  --ring: #CA8A04;
-  --chart-1: #6B0B0C;
-  --chart-2: #CA8A04;
+  --ring: #D3BA78;
+  --chart-1: #1C2544;
+  --chart-2: #D3BA78;
   --chart-3: oklch(0.55 0.12 220);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
-  --sidebar: #6B0B0C;
+  --sidebar: #1C2544;
   --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #CA8A04;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #8A1517;
+  --sidebar-primary: #D3BA78;
+  --sidebar-primary-foreground: #1C2544;
+  --sidebar-accent: #13192F;
   --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #8A1517;
-  --sidebar-ring: #CA8A04;
+  --sidebar-border: #13192F;
+  --sidebar-ring: #D3BA78;
 }
 
 .dark {
@@ -76,8 +76,8 @@
 }
 
 @theme inline {
-  --color-brand-red: #6B0B0C;
-  --color-brand-gold: #CA8A04;
+  --color-brand-blue: #1C2544;
+  --color-brand-gold: #D3BA78;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --color-background: var(--background);

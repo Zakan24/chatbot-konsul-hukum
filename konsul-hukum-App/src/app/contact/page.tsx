@@ -4,24 +4,24 @@ import Link from "next/link";
 import { PublicHeader } from "@/components/public-header";
 import { BrandText } from "@/components/brand-text";
 import { useSession } from "next-auth/react";
-import { Info, MessageCircle, BookOpen, ArrowLeft } from "lucide-react";
+import { Info, MessageCircle, BookOpen, ArrowLeft, Mail, Github, MapPin, Send } from "lucide-react";
 
 export default function ContactPage() {
   const { data: session } = useSession();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col font-sans selection:bg-accent/30 selection:text-primary">
       {/* Header */}
       {!session ? (
         <PublicHeader />
       ) : (
-        <header className="bg-primary text-primary-foreground border-primary-foreground/10 border-b px-4 md:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <img src="/logo-header.png" alt="KH" className="h-8 w-8 object-contain" />
-              <BrandText className="text-lg" />
+        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40 px-4 md:px-8 py-4 transition-all">
+          <div className="flex items-center justify-between max-w-6xl mx-auto">
+            <Link href="/" className="flex items-center gap-3 group">
+              <img src="/logo-header.png" alt="KH" className="h-9 w-9 object-contain group-hover:scale-105 transition-transform" />
+              <BrandText className="text-xl tracking-tight" />
             </Link>
-            <Link href="/chat" className="flex items-center gap-1.5 text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors font-medium">
+            <Link href="/chat" className="flex items-center gap-2 text-sm text-foreground/70 hover:text-accent transition-colors font-medium">
               <ArrowLeft className="h-4 w-4" />
               <span>Kembali ke Chat</span>
             </Link>
@@ -29,97 +29,116 @@ export default function ContactPage() {
         </header>
       )}
 
-      <main className="flex-1 bg-background">
-        {/* Hero */}
-        <section className="bg-primary text-primary-foreground py-16 md:py-24">
-          <div className="mx-auto max-w-4xl px-4 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">Hubungi Kami</h1>
-            <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto">
-              Punya pertanyaan, saran, atau menemukan masalah? Jangan ragu untuk menghubungi kami.
+      <main className="flex-1 bg-background overflow-hidden">
+        {/* Premium Hero Section */}
+        <section className="relative bg-primary text-primary-foreground py-24 md:py-32 flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-pulse"></div>
+            <div className="absolute bottom-0 left-1/4 w-[30rem] h-[30rem] bg-accent/10 rounded-full blur-[150px] mix-blend-screen opacity-40"></div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-overlay"></div>
+          </div>
+          
+          <div className="relative z-10 mx-auto max-w-3xl px-6 text-center space-y-6">
+            <div className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent backdrop-blur-sm mb-2">
+              Layanan Pelanggan
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white">
+              Hubungi <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-200">Kami</span>
+            </h1>
+            <p className="text-lg md:text-xl text-primary-foreground/80 max-w-xl mx-auto font-light leading-relaxed">
+              Membutuhkan bantuan teknis, kemitraan, atau ingin memberikan umpan balik? Tim kami siap mendengarkan.
             </p>
           </div>
+          
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent"></div>
         </section>
 
-        <div className="mx-auto max-w-4xl px-4 py-12">
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Contact Info */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-foreground">Informasi Kontak</h2>
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
+            
+            {/* Contact Info Panel */}
+            <div className="lg:col-span-5 space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tight text-foreground">Informasi Kontak</h2>
+                <p className="text-muted-foreground font-light">Kami merekomendasikan email untuk pertanyaan terperinci, atau kunjungi repositori kami untuk urusan teknis.</p>
+              </div>
 
               <div className="space-y-4">
-                <div className="flex items-start gap-4 rounded-xl border border-border bg-card p-5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect width="20" height="16" x="2" y="4" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-foreground text-sm">Email</h3>
-                    <a href="mailto:info@konsulhukum.ai" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      info@konsulhukum.ai
-                    </a>
-                  </div>
+                {[
+                  { icon: <Mail className="w-6 h-6" />, label: "Email Resmi", value: "info@konsulhukum.ai", link: "mailto:info@konsulhukum.ai" },
+                  { icon: <Github className="w-6 h-6" />, label: "Repositori GitHub", value: "github.com/konsulhukum", link: "https://github.com/konsulhukum" },
+                  { icon: <MapPin className="w-6 h-6" />, label: "Kantor Pusat", value: "Jakarta, Indonesia", link: "#" },
+                ].map((item, i) => (
+                  <a 
+                    key={i}
+                    href={item.link}
+                    target={item.link.startsWith("http") ? "_blank" : undefined}
+                    rel={item.link.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="flex items-center gap-5 p-5 rounded-2xl bg-card border border-border/50 hover:border-accent/40 hover:bg-accent/5 transition-all group"
+                  >
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-accent transition-colors shadow-sm">
+                      {item.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground text-sm tracking-wide uppercase opacity-70 mb-1">{item.label}</h3>
+                      <p className="text-lg font-medium text-foreground group-hover:text-primary transition-colors">
+                        {item.value}
+                      </p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Links Panel */}
+            <div className="lg:col-span-7 bg-primary/5 rounded-3xl p-8 md:p-12 border border-primary/10 relative overflow-hidden flex flex-col justify-center">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent/20 rounded-full blur-[80px]"></div>
+              
+              <div className="relative z-10 space-y-8">
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-bold text-foreground">Tautan Cepat</h2>
+                  <p className="text-muted-foreground font-light">Akses langsung ke fitur utama aplikasi.</p>
                 </div>
 
-                <div className="flex items-start gap-4 rounded-xl border border-border bg-card p-5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                      <path d="M9 18c-4.51 2-5-2-7-2" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-foreground text-sm">GitHub</h3>
-                    <a href="https://github.com/konsulhukum" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      github.com/konsulhukum
-                    </a>
-                  </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {[
+                    { icon: <Info className="w-6 h-6" />, title: "Tentang Aplikasi", desc: "Pelajari visi dan arsitektur Konsul Hukum AI.", href: "/about" },
+                    { icon: <MessageCircle className="w-6 h-6" />, title: "Mulai Konsultasi", desc: "Berinteraksi langsung dengan AI.", href: "/chat" },
+                    { icon: <BookOpen className="w-6 h-6" />, title: "Direktori Peraturan", desc: "Jelajahi arsip perundang-undangan.", href: "/direktori" },
+                  ].map((link, i) => (
+                    <Link 
+                      key={i} 
+                      href={link.href} 
+                      className={`group p-6 rounded-2xl bg-background border border-border/50 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all ${i === 2 ? 'sm:col-span-2' : ''}`}
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-accent shadow-inner group-hover:-translate-y-1 transition-transform">
+                          {link.icon}
+                        </div>
+                        <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ArrowLeft className="w-4 h-4 rotate-135" />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-foreground text-lg mb-1 group-hover:text-primary transition-colors">{link.title}</h3>
+                      <p className="text-sm text-muted-foreground font-light">{link.desc}</p>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Quick Links */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-foreground">Tautan Cepat</h2>
-              <div className="space-y-3">
-                <Link href="/about" className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 hover:shadow-md transition-all group">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/5 text-muted-foreground group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-                    <Info className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">Tentang Aplikasi</div>
-                    <div className="text-xs text-muted-foreground">Pelajari lebih lanjut tentang Konsul Hukum AI</div>
-                  </div>
-                </Link>
-                <Link href="/chat" className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 hover:shadow-md transition-all group">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/5 text-muted-foreground group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-                    <MessageCircle className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">Mulai Konsultasi</div>
-                    <div className="text-xs text-muted-foreground">Tanyakan pertanyaan seputar hukum</div>
-                  </div>
-                </Link>
-                <Link href="/direktori" className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 hover:shadow-md transition-all group">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/5 text-muted-foreground group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-                    <BookOpen className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">Direktori Peraturan</div>
-                    <div className="text-xs text-muted-foreground">Jelajahi peraturan di Indonesia</div>
-                  </div>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-muted border-t border-border py-6">
-        <div className="mx-auto max-w-4xl px-4 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Konsul Hukum AI.
+      {/* Elegant Footer */}
+      <footer className="bg-primary text-primary-foreground/60 py-8 border-t border-accent/20">
+        <div className="mx-auto max-w-6xl px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-light">
+          <div className="flex items-center gap-2">
+            <img src="/logo-header.png" alt="KH" className="h-6 w-6 object-contain opacity-50 grayscale" />
+            <span>© {new Date().getFullYear()} Konsul Hukum AI.</span>
+          </div>
+          <div>Hak Cipta Dilindungi Undang-Undang.</div>
         </div>
       </footer>
     </div>
