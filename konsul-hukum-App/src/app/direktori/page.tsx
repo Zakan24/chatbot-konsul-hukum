@@ -4,7 +4,7 @@ import { useState } from "react"
 import { api } from "nvn/trpc/react"
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
-import { LogOut } from "lucide-react"
+import { LogOut, Search, Filter, BookOpen, Scale, ArrowLeft, Calendar, Tag, ExternalLink } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { PublicHeader } from "@/components/public-header"
+import { BrandText } from "@/components/brand-text"
 
 export default function DirektoriPage() {
   const { data: session } = useSession()
@@ -82,223 +83,249 @@ export default function DirektoriPage() {
   const hasActiveFilters = search || filterKategori || filterTahun
 
   return (
-    <div className="flex h-screen flex-col bg-transparent">
+    <div className="flex h-screen flex-col font-sans selection:bg-accent/30 selection:text-primary">
       {/* Header */}
       {!session ? (
         <PublicHeader />
       ) : (
-        <header className="bg-white px-4 md:px-8 lg:px-24 py-4 shrink-0 border-b border-gray-100 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md overflow-hidden bg-white border border-gray-100 shadow-sm">
-                  <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
-                </div>
-                <h1 className="text-lg font-bold hidden sm:block text-[#1C2544]">Konsul Hukum</h1>
-              </Link>
-            </div>
+        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40 px-4 md:px-8 py-4 transition-all">
+          <div className="flex items-center justify-between max-w-7xl mx-auto">
+            <Link href="/" className="flex items-center gap-3 group">
+              <img src="/logo-header.png" alt="KH" className="h-9 w-9 object-contain group-hover:scale-105 transition-transform" />
+              <BrandText className="text-xl tracking-tight hidden sm:block" />
+            </Link>
 
-            {/* Back Button */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-4 md:gap-6">
               <Link
                 href="/chat"
-                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:text-gray-900 bg-white/60 backdrop-blur-md shadow-sm border border-white/50 hover:bg-white transition-colors"
+                className="flex items-center gap-2 text-sm text-foreground/70 hover:text-accent transition-colors font-medium"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m15 18-6-6 6-6"/>
-                </svg>
-                Kembali ke Chat
+                <ArrowLeft className="h-4 w-4" />
+                <span className="hidden sm:inline">Kembali ke Chat</span>
               </Link>
-            </div>
 
-            {/* User avatar dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-10 w-10 rounded-full p-0 cursor-pointer hover:bg-white/40"
-                >
-                  <Avatar className="h-10 w-10 border border-white/60 shadow-sm">
-                    <AvatarImage
-                      src={session?.user?.image ?? ""}
-                      alt={session?.user?.name ?? "User"}
-                    />
-                    <AvatarFallback className="bg-[#1C2544]/10 text-[#1C2544] font-semibold">
-                      {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-xl border-white/60 bg-white/90 backdrop-blur-xl">
-                <DropdownMenuLabel className="font-normal px-2 py-1.5">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-semibold text-gray-900 leading-none">
-                      {session?.user?.name}
-                    </p>
-                    <p className="text-gray-500 text-xs leading-none mt-1">
-                      {session?.user?.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-gray-100" />
-                <DropdownMenuItem className="cursor-pointer rounded-xl text-red-600 focus:bg-red-50 focus:text-red-700" onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Keluar</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <div className="w-px h-6 bg-border/50 hidden sm:block"></div>
+
+              {/* User avatar dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 w-10 rounded-full p-0 cursor-pointer hover:bg-muted/50 border border-border/50 shadow-sm"
+                  >
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage
+                        src={session?.user?.image ?? ""}
+                        alt={session?.user?.name ?? "User"}
+                      />
+                      <AvatarFallback className="bg-primary/5 text-primary font-semibold">
+                        {session?.user?.name?.charAt(0)?.toUpperCase() ?? "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-xl border-border bg-card">
+                  <DropdownMenuLabel className="font-normal px-2 py-1.5">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-semibold text-foreground leading-none">
+                        {session?.user?.name}
+                      </p>
+                      <p className="text-muted-foreground text-xs leading-none mt-1">
+                        {session?.user?.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-border/50" />
+                  <DropdownMenuItem className="cursor-pointer rounded-xl text-destructive focus:bg-destructive/10 focus:text-destructive" onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Keluar</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </header>
       )}
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto bg-transparent custom-scrollbar">
-        <div className="mx-auto max-w-4xl px-4 py-8 md:py-12">
-          {/* Search Bar */}
-          <div className="flex gap-2 mb-6">
-            <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Cari peraturan, pasal, atau topik hukum..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                className="w-full h-14 pl-12 pr-4 rounded-full border border-white/60 bg-white/80 backdrop-blur-md text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D3BA78]/20 focus:border-[#D3BA78]/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all"
-              />
-            </div>
-            <button
-              onClick={handleSearch}
-              className="flex items-center gap-2 rounded-full px-6 md:px-8 py-3 text-sm font-semibold text-black bg-white hover:bg-gray-50 border border-gray-200 transition-all cursor-pointer shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
-            >
-              Cari
-            </button>
+      <main className="flex-1 overflow-y-auto bg-background custom-scrollbar">
+        
+        {/* Premium Hero Section */}
+        <section className="relative bg-primary text-primary-foreground py-16 md:py-24 flex items-center justify-center overflow-hidden shrink-0">
+          <div className="absolute inset-0 z-0">
+            <div className="absolute top-0 right-1/4 w-80 h-80 bg-accent/20 rounded-full blur-[100px] mix-blend-screen opacity-50"></div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-overlay"></div>
           </div>
+          
+          <div className="relative z-10 mx-auto max-w-4xl px-6 text-center space-y-6">
+            <div className="inline-flex items-center rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent backdrop-blur-sm mb-2 shadow-sm">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Pusat Data Hukum
+            </div>
+            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-white">
+              Direktori Peraturan <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-200">Indonesia</span>
+            </h1>
+            <p className="text-base md:text-lg text-primary-foreground/80 max-w-2xl mx-auto font-light leading-relaxed">
+              Eksplorasi arsip perundang-undangan nasional yang terintegrasi secara komprehensif.
+            </p>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent"></div>
+        </section>
 
-          {/* Filter Row */}
-          <div className="flex flex-wrap items-center gap-3 mb-8">
-            <select
-              value={filterKategori}
-              onChange={(e) => { setFilterKategori(e.target.value); setPage(1); }}
-              className="h-10 rounded-full border border-white/60 bg-white/60 backdrop-blur-md px-4 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3BA78]/20 shadow-sm transition-all text-gray-700 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.75rem_center] bg-[length:1em_1em]"
-            >
-              <option value="">Semua Kategori</option>
-              {filterOptions?.kategori.map((k) => (
-                <option key={k} value={k}>{k}</option>
-              ))}
-            </select>
-
-            <select
-              value={filterTahun}
-              onChange={(e) => { setFilterTahun(e.target.value); setPage(1); }}
-              className="h-10 rounded-full border border-white/60 bg-white/60 backdrop-blur-md px-4 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#D3BA78]/20 shadow-sm transition-all text-gray-700 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.75rem_center] bg-[length:1em_1em]"
-            >
-              <option value="">Semua Tahun</option>
-              {filterOptions?.tahun.map((y) => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
-
-            {hasActiveFilters && (
+        <div className="mx-auto max-w-5xl px-4 md:px-8 py-10 md:py-16">
+          
+          {/* Search & Filter Container - Floating over content conceptually */}
+          <div className="bg-card border border-border/60 shadow-lg shadow-primary/5 rounded-3xl p-6 md:p-8 mb-12 -mt-24 relative z-20">
+            {/* Search Bar */}
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                  <Search className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Cari peraturan, pasal, atau topik hukum..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  className="w-full h-14 pl-12 pr-4 rounded-2xl border border-input bg-background text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all shadow-inner"
+                />
+              </div>
               <button
-                onClick={clearFilters}
-                className="h-10 rounded-full px-4 text-sm text-gray-500 hover:text-gray-900 hover:bg-white/40 transition-colors cursor-pointer font-medium"
+                onClick={handleSearch}
+                className="h-14 px-8 rounded-2xl text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all cursor-pointer shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center whitespace-nowrap"
               >
-                Reset Filter
+                Cari Peraturan
               </button>
-            )}
+            </div>
+
+            {/* Filter Row */}
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mr-2 hidden md:flex">
+                <Filter className="w-4 h-4" /> Filter:
+              </div>
+              
+              <div className="relative min-w-[180px] flex-1 sm:flex-none">
+                <select
+                  value={filterKategori}
+                  onChange={(e) => { setFilterKategori(e.target.value); setPage(1); }}
+                  className="w-full h-11 rounded-xl border border-input bg-background px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all text-foreground cursor-pointer appearance-none shadow-sm"
+                >
+                  <option value="">Semua Kategori</option>
+                  {filterOptions?.kategori.map((k) => (
+                    <option key={k} value={k}>{k}</option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-muted-foreground">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+
+              <div className="relative min-w-[150px] flex-1 sm:flex-none">
+                <select
+                  value={filterTahun}
+                  onChange={(e) => { setFilterTahun(e.target.value); setPage(1); }}
+                  className="w-full h-11 rounded-xl border border-input bg-background px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all text-foreground cursor-pointer appearance-none shadow-sm"
+                >
+                  <option value="">Semua Tahun</option>
+                  {filterOptions?.tahun.map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-muted-foreground">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+              </div>
+
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="h-11 rounded-xl px-4 text-sm text-destructive hover:bg-destructive/10 transition-colors cursor-pointer font-medium ml-auto sm:ml-0"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Results count */}
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-white/80 font-medium">
+          <div className="flex items-center justify-between mb-6 px-2">
+            <h2 className="text-lg font-bold text-foreground">
               {peraturanQuery.isLoading
                 ? "Memuat data peraturan..."
-                : `Menampilkan ${peraturanList.length} dari ${totalCount} Peraturan`}
-            </p>
+                : hasActiveFilters 
+                  ? `Hasil Pencarian (${totalCount})` 
+                  : `Total Peraturan (${totalCount})`}
+            </h2>
           </div>
 
           {/* Peraturan List */}
-          <div className="space-y-4">
+          <div className="space-y-5">
             {peraturanList.map((item) => (
               <a
                 key={item.id}
                 href={item.url_bpk || "#"}
                 target={item.url_bpk ? "_blank" : undefined}
                 rel={item.url_bpk ? "noopener noreferrer" : undefined}
-                className="group block rounded-2xl border border-white/60 bg-white/80 backdrop-blur-md p-5 md:p-6 shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 hover:border-[#D3BA78]/40 transition-all duration-300"
+                className="group block rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-accent/40 transition-all duration-300 relative overflow-hidden"
               >
-                {/* Title */}
-                <h3 className="font-bold text-gray-900 mb-1 group-hover:text-[#1C2544] transition-colors text-base md:text-lg">
-                  {item.judul}
-                </h3>
+                {/* Decorative background shape */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-0 group-hover:bg-accent/10 transition-colors"></div>
+                
+                <div className="relative z-10">
+                  {/* Title */}
+                  <h3 className="font-bold text-foreground mb-2 group-hover:text-primary transition-colors text-lg md:text-xl pr-12">
+                    {item.judul}
+                  </h3>
 
-                {/* Sub Title */}
-                {item.sub_judul && (
-                  <p className="text-sm font-medium text-gray-700 mb-3 uppercase tracking-wide">
-                    {item.sub_judul}
-                  </p>
-                )}
-
-                {/* Description (isi) */}
-                {item.isi && (
-                  <p className="text-sm text-gray-600 mb-5 leading-relaxed line-clamp-2 md:line-clamp-3">
-                    {item.isi}
-                  </p>
-                )}
-
-                {/* Divider */}
-                <div className="border-t border-gray-100/80 pt-4 flex flex-wrap items-center gap-3 text-xs">
-                  {/* Year */}
-                  {item.tahun && (
-                    <span className="flex items-center gap-1.5 bg-gray-100/80 text-gray-700 px-3 py-1.5 rounded-full font-medium">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                        <line x1="16" x2="16" y1="2" y2="6" />
-                        <line x1="8" x2="8" y1="2" y2="6" />
-                        <line x1="3" x2="21" y1="10" y2="10" />
-                      </svg>
-                      {item.tahun}
-                    </span>
+                  {/* Sub Title */}
+                  {item.sub_judul && (
+                    <p className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wider">
+                      {item.sub_judul}
+                    </p>
                   )}
 
-                  {/* Kategori Hukum */}
-                  {item.kategori_hukum && (
-                    <span className="flex items-center gap-1.5 bg-[#D3BA78]/10 text-[#D3BA78] px-3 py-1.5 rounded-full font-medium border border-[#D3BA78]/20">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                      </svg>
-                      {item.kategori_hukum}
-                    </span>
+                  {/* Description (isi) */}
+                  {item.isi && (
+                    <p className="text-sm text-muted-foreground mb-6 leading-relaxed line-clamp-2 md:line-clamp-3 font-light">
+                      {item.isi}
+                    </p>
                   )}
 
-                  {/* Tanggal Berlaku */}
-                  {item.tanggal_berlaku && (
-                    <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full font-medium border border-emerald-100/50">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                      </svg>
-                      Berlaku: {item.tanggal_berlaku}
-                    </span>
-                  )}
+                  {/* Divider */}
+                  <div className="border-t border-border/50 pt-5 flex flex-wrap items-center gap-3 text-xs">
+                    {/* Year */}
+                    {item.tahun && (
+                      <span className="flex items-center gap-1.5 bg-muted text-foreground px-3 py-1.5 rounded-full font-medium">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {item.tahun}
+                      </span>
+                    )}
 
-                  {/* External link */}
-                  {item.url_bpk && (
-                    <span className="flex items-center gap-1.5 ml-auto group-hover:text-[#1C2544] transition-colors font-medium">
-                      Lihat di BPK
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M7 17 17 7" />
-                        <path d="M7 7h10v10" />
-                      </svg>
-                    </span>
-                  )}
+                    {/* Kategori Hukum */}
+                    {item.kategori_hukum && (
+                      <span className="flex items-center gap-1.5 bg-accent/10 text-primary px-3 py-1.5 rounded-full font-medium border border-accent/20">
+                        <Tag className="w-3.5 h-3.5" />
+                        {item.kategori_hukum}
+                      </span>
+                    )}
+
+                    {/* Tanggal Berlaku */}
+                    {item.tanggal_berlaku && (
+                      <span className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-full font-medium border border-emerald-500/20">
+                        <Scale className="w-3.5 h-3.5" />
+                        Berlaku: {item.tanggal_berlaku}
+                      </span>
+                    )}
+
+                    {/* External link */}
+                    {item.url_bpk && (
+                      <span className="flex items-center gap-1.5 ml-auto text-muted-foreground group-hover:text-accent transition-colors font-semibold">
+                        Lihat Sumber Asli
+                        <ExternalLink className="w-4 h-4" />
+                      </span>
+                    )}
+                  </div>
                 </div>
               </a>
             ))}
@@ -306,63 +333,65 @@ export default function DirektoriPage() {
 
           {/* Empty state */}
           {!peraturanQuery.isLoading && peraturanList.length === 0 && (
-            <div className="text-center py-20 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/60">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-gray-300 mb-4">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
-              <p className="text-gray-500 font-medium mb-2">Tidak ada peraturan ditemukan.</p>
+            <div className="text-center py-24 bg-card rounded-3xl border border-border/50 shadow-sm">
+              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                <Search className="w-8 h-8 text-muted-foreground opacity-50" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground mb-2">Tidak ada peraturan ditemukan</h3>
+              <p className="text-muted-foreground font-light mb-6">Coba gunakan kata kunci lain atau ubah filter pencarian Anda.</p>
               <button
                 onClick={clearFilters}
-                className="text-sm text-[#D3BA78] hover:text-[#B89E5F] hover:underline cursor-pointer"
+                className="px-6 py-2 bg-primary/10 text-primary font-semibold rounded-full hover:bg-primary hover:text-primary-foreground transition-all cursor-pointer"
               >
-                Reset filter
+                Reset Semua Filter
               </button>
             </div>
           )}
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-8 pb-8">
+            <div className="flex items-center justify-center gap-2 mt-12">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="h-9 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer shadow-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:text-gray-400 flex items-center justify-center"
+                className="h-10 rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted transition-all cursor-pointer shadow-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                ← Sebelumnya
+                <ArrowLeft className="w-4 h-4" /> <span className="hidden sm:inline">Sebelumnya</span>
               </button>
 
-              {getPageNumbers().map((p, idx) => {
-                if (p === "...") {
-                  return (
-                    <span key={`ellipsis-${idx}`} className="px-1 text-gray-400 font-medium">
-                      ...
-                    </span>
-                  )
-                }
+              <div className="flex items-center gap-1 px-2">
+                {getPageNumbers().map((p, idx) => {
+                  if (p === "...") {
+                    return (
+                      <span key={`ellipsis-${idx}`} className="px-2 text-muted-foreground font-medium">
+                        ...
+                      </span>
+                    )
+                  }
 
-                const pageNum = p as number
-                return (
-                  <button
-                    key={`page-${pageNum}`}
-                    onClick={() => setPage(pageNum)}
-                    className={`h-9 min-w-9 rounded-xl px-3 py-2 text-sm font-medium transition-all cursor-pointer shadow-sm ${
-                      pageNum === page
-                        ? "bg-[#1C2544] text-white border border-[#1C2544]"
-                        : "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                )
-              })}
+                  const pageNum = p as number
+                  return (
+                    <button
+                      key={`page-${pageNum}`}
+                      onClick={() => setPage(pageNum)}
+                      className={`h-10 min-w-10 rounded-xl px-3 py-2 text-sm font-bold transition-all cursor-pointer shadow-sm ${
+                        pageNum === page
+                          ? "bg-primary text-primary-foreground border-transparent shadow-md transform scale-105"
+                          : "border border-border bg-card hover:bg-muted text-foreground"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                })}
+              </div>
 
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="h-9 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer shadow-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:text-gray-400 flex items-center justify-center"
+                className="h-10 rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted transition-all cursor-pointer shadow-sm disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Selanjutnya →
+                <span className="hidden sm:inline">Selanjutnya</span> <ArrowLeft className="w-4 h-4 rotate-180" />
               </button>
             </div>
           )}

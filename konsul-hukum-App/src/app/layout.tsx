@@ -21,7 +21,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
-      <body className="font-sans antialiased bg-gradient-to-br from-[#4D0607] via-[#1C2544] to-[#2B0203]" suppressHydrationWarning>
+      <body className="font-sans antialiased bg-background text-foreground selection:bg-accent/30 selection:text-primary" suppressHydrationWarning>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
