@@ -1,3 +1,4 @@
+// Trigger rebuild
 import "nvn/styles/globals.css";
 
 import { type Metadata } from "next";
