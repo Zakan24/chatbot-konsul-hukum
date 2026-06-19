@@ -33,7 +33,7 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.konsulhukum.rule=Host(`chat.nvnlab.space`)"
+      - "traefik.http.routers.konsulhukum.rule=Host(`konsultasihukum.online`)"
       - "traefik.http.routers.konsulhukum.entrypoints=websecure"
       - "traefik.http.routers.konsulhukum.tls=true"
       - "traefik.http.routers.konsulhukum.tls.certresolver=letsencrypt"
