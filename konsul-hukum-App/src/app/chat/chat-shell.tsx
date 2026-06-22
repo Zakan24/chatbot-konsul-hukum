@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { LogOut, Menu, X, Send, Loader2, MessageSquare, ChevronDown, MoreVertical, Scale, ClipboardList, History, MessageCircle } from "lucide-react";
+import { LogOut, Menu, X, Send, Loader2, MessageSquare, ChevronDown, MoreVertical, Scale, ClipboardList, History, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
 
 import { ChatMessage } from "@/components/chat-message";
 import { PublicHeader } from "@/components/public-header";
@@ -70,6 +70,7 @@ export function ChatShell({ initialChatId, isGuest = false }: ChatShellProps) {
   const { data: session } = useSession();
   const [message, setMessage] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   // Guest mode state — persist in localStorage so refresh doesn't reset
   const [guestMessageSent, setGuestMessageSent] = useState(() => {
@@ -733,10 +734,68 @@ export function ChatShell({ initialChatId, isGuest = false }: ChatShellProps) {
             </Link>
           </div>
 
-          <button className="w-full bg-[#1C2544] text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-[#13192F] transition mb-6 cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
-            Konsultasi Langsung
-          </button>
+          <div className="mb-6">
+            <button
+              onClick={() => setIsContactOpen(!isContactOpen)}
+              className="w-full bg-[#1C2544] text-white rounded-2xl py-3 flex justify-center items-center gap-2 font-medium text-sm shadow-md hover:bg-[#13192F] transition cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+              Konsultasi Langsung
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isContactOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Contact Info Panel */}
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isContactOpen ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 mt-0'}`}>
+              <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm space-y-4">
+                {/* WhatsApp */}
+                <a
+                  href="https://wa.me/6281317801888"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 group cursor-pointer hover:bg-green-50/50 rounded-xl p-2.5 -m-1 transition-colors"
+                >
+                  <div className="w-9 h-9 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-gray-700 group-hover:text-green-700 transition-colors">WhatsApp</p>
+                    <p className="text-xs text-gray-500 group-hover:text-green-600 transition-colors">0813-1780-1888</p>
+                  </div>
+                </a>
+
+                {/* Email */}
+                <a
+                  href="mailto:agussalimlawfirm76@gmail.com"
+                  className="flex items-start gap-3 group cursor-pointer hover:bg-blue-50/50 rounded-xl p-2.5 -m-1 transition-colors"
+                >
+                  <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-gray-700 group-hover:text-blue-700 transition-colors">Email</p>
+                    <p className="text-xs text-gray-500 group-hover:text-blue-600 transition-colors break-all">agussalimlawfirm76@gmail.com</p>
+                  </div>
+                </a>
+
+                {/* Alamat Kantor */}
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Jl.+Desa+Keranggan+Blok+AA+No.18+Kel.+Kranggan+Kec.+Setu+Kota+Tangerang+Selatan+Banten+15312"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 group cursor-pointer hover:bg-red-50/50 rounded-xl p-2.5 -m-1 transition-colors"
+                >
+                  <div className="w-9 h-9 rounded-full bg-red-100 text-red-500 flex items-center justify-center shrink-0">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-gray-700 group-hover:text-red-700 transition-colors">Alamat Kantor</p>
+                    <p className="text-xs text-gray-500 group-hover:text-red-600 transition-colors leading-relaxed">Jl. Desa Keranggan Blok AA No.18, Kel. Kranggan, Kec. Setu, Kota Tangerang Selatan, Banten 15312</p>
+                  </div>
+                </a>
+
+              </div>
+            </div>
+          </div>
 
           <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
             {isGuest ? (
