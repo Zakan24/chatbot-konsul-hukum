@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PublicHeader } from "@/components/public-header";
 import { BrandText } from "@/components/brand-text";
 import { useSession } from "next-auth/react";
-import { Info, MessageCircle, BookOpen, ArrowLeft, Mail, Github, MapPin, Send } from "lucide-react";
+import { Info, MessageCircle, BookOpen, ArrowLeft, Mail, MapPin, Send, Phone } from "lucide-react";
 
 export default function ContactPage() {
   const { data: session } = useSession();
@@ -60,14 +60,14 @@ export default function ContactPage() {
             <div className="lg:col-span-5 space-y-8">
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold tracking-tight text-foreground">Informasi Kontak</h2>
-                <p className="text-muted-foreground font-light">Kami merekomendasikan email untuk pertanyaan terperinci, atau kunjungi repositori kami untuk urusan teknis.</p>
+                <p className="text-muted-foreground font-light">Hubungi kami melalui WhatsApp, email, atau kunjungi kantor kami untuk konsultasi lebih lanjut.</p>
               </div>
 
               <div className="space-y-4">
                 {[
-                  { icon: <Mail className="w-6 h-6" />, label: "Email Resmi", value: "info@konsulhukum.ai", link: "mailto:info@konsulhukum.ai" },
-                  { icon: <Github className="w-6 h-6" />, label: "Repositori GitHub", value: "github.com/konsulhukum", link: "https://github.com/konsulhukum" },
-                  { icon: <MapPin className="w-6 h-6" />, label: "Kantor Pusat", value: "Jakarta, Indonesia", link: "#" },
+                  { icon: <Phone className="w-6 h-6" />, label: "WhatsApp", value: "0813-1780-1888", link: "https://wa.me/6281317801888" },
+                  { icon: <Mail className="w-6 h-6" />, label: "Email Resmi", value: "agussalimlawfirm76@gmail.com", link: "mailto:agussalimlawfirm76@gmail.com" },
+                  { icon: <MapPin className="w-6 h-6" />, label: "Kantor Pusat", value: "Jl. Desa Keranggan Blok AA No.18, Kel. Kranggan, Kec. Setu, Kota Tangerang Selatan, Banten 15312", link: "https://www.google.com/maps/search/?api=1&query=Jl.+Desa+Keranggan+Blok+AA+No.18+Kel.+Kranggan+Kec.+Setu+Kota+Tangerang+Selatan+Banten+15312" },
                 ].map((item, i) => (
                   <a 
                     key={i}
